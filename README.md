@@ -1,4 +1,4 @@
-# image_upload
+# yash-infotech-bca-student-attendance-app
 
 A new Flutter project.
 
