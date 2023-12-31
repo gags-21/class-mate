@@ -11,7 +11,6 @@ import 'package:workmanager/workmanager.dart';
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((taskName, inputData) async {
-    final data = await UserApi().getData();
     return Future.value(true);
   });
 }

@@ -1,11 +1,22 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_upload/api_key.dart';
+import 'package:image_upload/util/shared_prefs.dart';
 
 class UserApi {
-  Future<void> getData() async {
-    final sharedPreference = await SharedPreferences.getInstance();
-    var uri = Uri.parse("https://jsonplaceholder.typicode.com/todos/1");
-    var response = await http.get(uri);
-    sharedPreference.setString("apiJson", response.body.toString());
+  // attendance timing
+  Future<void> getValidateTime() async {
+    var uri = Uri.parse("https://www.bcaeducation.com/lms/api/attendance-time");
+    var response = await http.post(uri, body: {
+      "passkey": api_key,
+    }).then((value) async {
+      final time = json.decode(value.body)["AttendanceTime"];
+      await Future.delayed(Duration(seconds: 5)).then((value) {
+        sharedPrefs.validTime = [time["start_time"], time["end_time"]];
+      });
+    }).catchError((err) {
+      throw "Error";
+    });
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_upload/provider/validations_provider.dart';
 import 'package:image_upload/screens/home.dart';
+import 'package:image_upload/util/api.dart';
+import 'package:image_upload/util/shared_prefs.dart';
 import 'package:provider/provider.dart';
 
 class StudentSelectPage extends StatefulWidget {
@@ -11,12 +13,27 @@ class StudentSelectPage extends StatefulWidget {
 }
 
 class _StudentSelectPageState extends State<StudentSelectPage> {
+  bool isDataLoading = true;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ValidationsProvider>(context, listen: false)
-          .internetAvailability();
+      final validationProvider =
+          Provider.of<ValidationsProvider>(context, listen: false);
+      validationProvider.internetAvailability();
+
+      UserApi().getValidateTime().then((value) {
+        validationProvider.validateTime(
+            sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+        setState(() {
+          isDataLoading = false;
+        });
+      }).catchError((err) {
+        setState(() {
+          isDataLoading = false;
+        });
+      });
     });
   }
 
@@ -26,11 +43,37 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
       appBar: AppBar(),
       body: Center(
         child: Consumer<ValidationsProvider>(builder: (context, status, _) {
-          status.isInternet;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Text(
+                isDataLoading
+                    ? "Fetching Attendance timing"
+                    : sharedPrefs.validTime.isNotEmpty
+                        ? "Today's Attendance Time  \n ${sharedPrefs.validTime[0]} to ${sharedPrefs.validTime[1]}"
+                        : "No data",
+                textAlign: TextAlign.center,
+              ),
+              const Spacer(),
+              isDataLoading
+                  ? const SizedBox()
+                  : status.isInTime
+                      ? const Text(
+                          "You can mark attendace!",
+                          style: TextStyle(color: Colors.green),
+                        )
+                      : sharedPrefs.validTime.isNotEmpty
+                          ? const Text(
+                              "Sorry, Please mark attendace in given time.",
+                              style: TextStyle(color: Colors.red),
+                            )
+                          : const Text(
+                              "Please connect to internet",
+                              style: TextStyle(
+                                color: Colors.orange,
+                              ),
+                            ),
               const SizedBox(
                 height: 20,
               ),
@@ -87,15 +130,24 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                       padding: const EdgeInsets.only(bottom: 20),
                       child: FilledButton.tonal(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AttendancePage()),
-                          );
+                          isDataLoading
+                              ? null
+                              : status.isInTime
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AttendancePage()),
+                                    )
+                                  : null;
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
-                            Colors.blueAccent,
+                            isDataLoading
+                                ? Colors.grey.shade600
+                                : status.isInTime
+                                    ? Colors.blueAccent
+                                    : Colors.red,
                           ),
                           shape: MaterialStateProperty.all(
                             RoundedRectangleBorder(

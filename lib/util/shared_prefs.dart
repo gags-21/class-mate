@@ -10,11 +10,15 @@ class SharedPrefs {
 
   String get lat => _sharedPrefs.getString(userLatKey) ?? "";
   String get long => _sharedPrefs.getString(userLatKey) ?? "";
+  List<String> get validTime => _sharedPrefs.getStringList(validTimeKey) ?? [];
 
   set userLocation(List<String> location) {
-    print(location); 
     _sharedPrefs.setString(userLatKey, location[0]);
     _sharedPrefs.setString(userLongKey, location[1]);
+  }
+
+  set validTime(List<String> time) {
+    _sharedPrefs.setStringList(validTimeKey, time);
   }
 }
 
