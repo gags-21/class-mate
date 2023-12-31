@@ -14,6 +14,7 @@ class StudentSelectPage extends StatefulWidget {
 
 class _StudentSelectPageState extends State<StudentSelectPage> {
   bool isDataLoading = true;
+  final apis = UserApi();
 
   @override
   void initState() {
@@ -23,9 +24,21 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
           Provider.of<ValidationsProvider>(context, listen: false);
       validationProvider.internetAvailability();
 
-      UserApi().getValidateTime().then((value) {
+      apis.getValidateTime().then((value) {
         validationProvider.validateTime(
             sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+        validationProvider.isInTime
+            ? apis.getStudentList().then((value) {
+                validationProvider.setStudents(sharedPrefs.studentList);
+                setState(() {
+                  isDataLoading = false;
+                });
+              }).catchError((err) {
+                setState(() {
+                  isDataLoading = false;
+                });
+              })
+            : null;
         setState(() {
           isDataLoading = false;
         });

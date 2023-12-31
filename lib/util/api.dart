@@ -12,9 +12,21 @@ class UserApi {
       "passkey": api_key,
     }).then((value) async {
       final time = json.decode(value.body)["AttendanceTime"];
-      await Future.delayed(Duration(seconds: 5)).then((value) {
-        sharedPrefs.validTime = [time["start_time"], time["end_time"]];
-      });
+       sharedPrefs.validTime = [time["start_time"], time["end_time"]];
+      // sharedPrefs.validTime = ["21:00:00", "23:30:00"];
+    }).catchError((err) {
+      throw "Error";
+    });
+  }
+
+  // students list
+  Future<void> getStudentList() async {
+    var uri = Uri.parse("https://www.bcaeducation.com/lms/api/students");
+    var response = await http.post(uri, body: {
+      "passkey": api_key,
+    }).then((value) async {
+      final students = value.body;
+      sharedPrefs.studentList = students;
     }).catchError((err) {
       throw "Error";
     });

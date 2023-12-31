@@ -8,6 +8,7 @@ class SharedPrefs {
     _sharedPrefs = await SharedPreferences.getInstance();
   }
 
+  String get studentList => _sharedPrefs.getString(studentListKey) ?? "";
   String get lat => _sharedPrefs.getString(userLatKey) ?? "";
   String get long => _sharedPrefs.getString(userLatKey) ?? "";
   List<String> get validTime => _sharedPrefs.getStringList(validTimeKey) ?? [];
@@ -19,6 +20,10 @@ class SharedPrefs {
 
   set validTime(List<String> time) {
     _sharedPrefs.setStringList(validTimeKey, time);
+  }
+
+  set studentList(String students) {
+    _sharedPrefs.setString(studentListKey, students);
   }
 }
 
