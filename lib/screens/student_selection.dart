@@ -15,6 +15,13 @@ class StudentSelectPage extends StatefulWidget {
 class _StudentSelectPageState extends State<StudentSelectPage> {
   bool isDataLoading = true;
   final apis = UserApi();
+  Object? selectedName;
+  bool validName = true;
+  int? id;
+
+  // snacks
+  var snack =
+      const SnackBar(content: Text("Enter Correct name from suggestions"));
 
   @override
   void initState() {
@@ -43,6 +50,9 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
           isDataLoading = false;
         });
       }).catchError((err) {
+        validationProvider.validateTime(
+            sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+        validationProvider.setStudents(sharedPrefs.studentList);
         setState(() {
           isDataLoading = false;
         });
@@ -90,18 +100,61 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
               const SizedBox(
                 height: 20,
               ),
+
               // student search
               SizedBox(
                 height: 50,
                 width: 300,
-                child: TextField(
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(10),
-                    hintText: "Enter Student Name",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
+                child: Autocomplete(
+                  fieldViewBuilder: (context, textEditingController, focusNode,
+                      onFieldSubmitted) {
+                    textEditingController.addListener(() {
+                      validName = status.students.any((s) {
+                        if (s.name == textEditingController.text) {
+                          id = s.id;
+                          return true;
+                        }
+                        return false;
+                      });
+                      setState(() {});
+                    });
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(
+                            color:
+                                validName ? Colors.black38 : Colors.redAccent),
+                      ),
+                      child: TextField(
+                        controller: textEditingController,
+                        focusNode: focusNode,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: EdgeInsets.all(10),
+                          hintText: "Enter Student Name",
+                        ),
+                      ),
+                    );
+                  },
+                  optionsBuilder: (TextEditingValue textEditingValue) {
+                    if (textEditingValue.text == '') {
+                      return const Iterable<String>.empty();
+                    } else {
+                      List<String> matches = <String>[];
+                      matches.addAll(
+                        status.students.map((e) => e.name),
+                      );
+                      matches.retainWhere((s) {
+                        return s
+                            .toLowerCase()
+                            .contains(textEditingValue.text.toLowerCase());
+                      });
+                      return matches;
+                    }
+                  },
+                  onSelected: (String selection) {},
                 ),
               ),
 
@@ -121,10 +174,8 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                         decoration: BoxDecoration(
                           color: status.isInternet ? Colors.green : Colors.red,
                           borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(
-                                10.0), // Adjust the radius as needed
-                            bottomRight: Radius.circular(
-                                10.0), // Adjust the radius as needed
+                            bottomLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0),
                           ),
                         ),
                         child: Center(
@@ -145,14 +196,17 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                         onPressed: () {
                           isDataLoading
                               ? null
-                              : status.isInTime
-                                  ? Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const AttendancePage()),
-                                    )
-                                  : null;
+                              : validName && id != null
+                                  ? status.isInTime
+                                      ? Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const AttendancePage()),
+                                        )
+                                      : null
+                                  : ScaffoldMessenger.of(context)
+                                      .showSnackBar(snack);
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
