@@ -10,8 +10,11 @@ class SharedPrefs {
 
   String get studentList => _sharedPrefs.getString(studentListKey) ?? "";
   String get lat => _sharedPrefs.getString(userLatKey) ?? "";
-  String get long => _sharedPrefs.getString(userLatKey) ?? "";
+  String get long => _sharedPrefs.getString(userLongKey) ?? "";
   List<String> get validTime => _sharedPrefs.getStringList(validTimeKey) ?? [];
+  String get studentId => _sharedPrefs.getString(studentIdKey) ?? "";
+  String get funcFeedback =>
+      _sharedPrefs.getString(funcFeedbackKey) ?? "No Feedback";
 
   set userLocation(List<String> location) {
     _sharedPrefs.setString(userLatKey, location[0]);
@@ -24,6 +27,14 @@ class SharedPrefs {
 
   set studentList(String students) {
     _sharedPrefs.setString(studentListKey, students);
+  }
+
+  set studentId(String id) {
+    _sharedPrefs.setString(studentIdKey, id);
+  }
+
+  set funcFeedback(String feedback) {
+    _sharedPrefs.setString(funcFeedbackKey, feedback);
   }
 }
 

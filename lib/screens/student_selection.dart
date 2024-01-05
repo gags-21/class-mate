@@ -78,6 +78,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                         : "No data",
                 textAlign: TextAlign.center,
               ),
+              Text(sharedPrefs.funcFeedback),
               const Spacer(),
               isDataLoading
                   ? const SizedBox()
@@ -112,6 +113,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                       validName = status.students.any((s) {
                         if (s.name == textEditingController.text) {
                           id = s.id;
+                          sharedPrefs.studentId = s.id.toString();
                           return true;
                         }
                         return false;

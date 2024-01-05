@@ -28,19 +28,16 @@ class _AttendancePageState extends State<AttendancePage> {
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      var snack = const SnackBar(content: Text("Something Went Wrong"));
+      ScaffoldMessenger.of(context).showSnackBar(snack);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    // Workmanager().registerPeriodicTask("checkNet", "uploadImg",
-    //     frequency: const Duration(seconds: 5),
-    //     constraints: Constraints(networkType: NetworkType.connected));
     detectLocation().then((value) {
       //  storing location
-      print("From here - ${value.latitude.toString()} ${value.longitude.toString()}");
       sharedPrefs.userLocation = [
         value.latitude.toString(),
         value.longitude.toString()
@@ -49,6 +46,12 @@ class _AttendancePageState extends State<AttendancePage> {
         stateLoading = false;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   void backgroundTask() {
@@ -149,8 +152,14 @@ class _AttendancePageState extends State<AttendancePage> {
                             child: FilledButton.tonal(
                               onPressed: () {
                                 if (image != null) {
-                                  if (status.isInternet) {
-                                  } else {}
+                                  // if (status.isInternet) {
+                                    // call upload func
+
+                                    backgroundTask();
+
+                                    // } else {
+                                    // call offline func
+                                  // }
                                 } else {
                                   var snack = const SnackBar(
                                       content:

@@ -31,4 +31,30 @@ class UserApi {
       throw "Error";
     });
   }
+
+  // post student details
+  Future<String> sendStudentInfo({
+    required String id,
+    required String lat,
+    required String long,
+  }) async {
+    Map info = {
+      "passkey": api_key,
+      "student_id": id,
+      "latitude": lat,
+      "longitude": long,
+    };
+    var uri = Uri.parse(
+        "https://www.bcaeducation.com/lms/api/student/attendance/store");
+    try {
+      var response = await http.post(uri, body: info);
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (e) {
+      throw "error - $e";
+    }
+  }
 }
