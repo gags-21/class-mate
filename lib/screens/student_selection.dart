@@ -63,6 +63,41 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final validationProvider =
+        Provider.of<ValidationsProvider>(context, listen: false);
+
+    Future<void> updateValidTime() async {
+      setState(() {
+        isDataLoading = true;
+      });
+      apis.getValidateTime().then((value) {
+        validationProvider.validateTime(
+            sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+        validationProvider.isInTime
+            ? apis.getStudentList().then((value) {
+                validationProvider.setStudents(sharedPrefs.studentList);
+                setState(() {
+                  isDataLoading = false;
+                });
+              }).catchError((err) {
+                setState(() {
+                  isDataLoading = false;
+                });
+              })
+            : null;
+        setState(() {
+          isDataLoading = false;
+        });
+      }).catchError((err) {
+        validationProvider.validateTime(
+            sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+        validationProvider.setStudents(sharedPrefs.studentList);
+        setState(() {
+          isDataLoading = false;
+        });
+      });
+    }
+
     return Scaffold(
       // appBar: AppBar(),
       body: Center(
@@ -74,6 +109,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  // app name
                   RichText(
                     text: const TextSpan(
                         children: [
@@ -94,18 +130,39 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                   const SizedBox(
                     height: 50,
                   ),
-                  Text(
-                    isDataLoading
-                        ? "Fetching Attendance timing"
-                        : sharedPrefs.validTime.isNotEmpty
-                            ? "Today's Attendance Time  \n ${sharedPrefs.validTime[0]} to ${sharedPrefs.validTime[1]}"
-                            : "No data",
-                    textAlign: TextAlign.center,
+
+                  // timing
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        isDataLoading
+                            ? "Fetching Attendance timing"
+                            : sharedPrefs.validTime.isNotEmpty
+                                ? "Today's Attendance Time  \n ${sharedPrefs.validTime[0]} to ${sharedPrefs.validTime[1]}"
+                                : "No data",
+                        textAlign: TextAlign.center,
+                      ),
+                      IconButton.outlined(
+                        onPressed: () async {
+                          await updateValidTime();
+                        },
+                        iconSize: 20,
+                        icon: const Icon(
+                          Icons.refresh,
+                        ),
+                        enableFeedback: true,
+                        tooltip: "Refresh timings",
+                      )
+                    ],
                   ),
                   // Text(sharedPrefs.funcFeedback),
                   SizedBox(
                     height: size.height * .3,
                   ),
+
+                  // alert
                   isDataLoading
                       ? const SizedBox()
                       : status.isInTime
