@@ -31,32 +31,34 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
           Provider.of<ValidationsProvider>(context, listen: false);
       validationProvider.internetAvailability();
 
-      apis.getValidateTime().then((value) {
-        validationProvider.validateTime(
-            sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
-        validationProvider.isInTime
-            ? apis.getStudentList().then((value) {
-                validationProvider.setStudents(sharedPrefs.studentList);
-                setState(() {
-                  isDataLoading = false;
-                });
-              }).catchError((err) {
-                setState(() {
-                  isDataLoading = false;
-                });
-              })
-            : null;
-        setState(() {
-          isDataLoading = false;
+      if (sharedPrefs.funcFeedback != "No Feedback") {
+        apis.getValidateTime().then((value) {
+          validationProvider.validateTime(
+              sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+          validationProvider.isInTime
+              ? apis.getStudentList().then((value) {
+                  validationProvider.setStudents(sharedPrefs.studentList);
+                  setState(() {
+                    isDataLoading = false;
+                  });
+                }).catchError((err) {
+                  setState(() {
+                    isDataLoading = false;
+                  });
+                })
+              : null;
+          setState(() {
+            isDataLoading = false;
+          });
+        }).catchError((err) {
+          validationProvider.validateTime(
+              sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+          validationProvider.setStudents(sharedPrefs.studentList);
+          setState(() {
+            isDataLoading = false;
+          });
         });
-      }).catchError((err) {
-        validationProvider.validateTime(
-            sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
-        validationProvider.setStudents(sharedPrefs.studentList);
-        setState(() {
-          isDataLoading = false;
-        });
-      });
+      }
     });
   }
 
@@ -70,32 +72,35 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
       setState(() {
         isDataLoading = true;
       });
-      apis.getValidateTime().then((value) {
-        validationProvider.validateTime(
-            sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
-        validationProvider.isInTime
-            ? apis.getStudentList().then((value) {
-                validationProvider.setStudents(sharedPrefs.studentList);
-                setState(() {
-                  isDataLoading = false;
-                });
-              }).catchError((err) {
-                setState(() {
-                  isDataLoading = false;
-                });
-              })
-            : null;
-        setState(() {
-          isDataLoading = false;
+      if (sharedPrefs.funcFeedback != "No Feedback" &&
+          validationProvider.isInternet) {
+        apis.getValidateTime().then((value) {
+          validationProvider.validateTime(
+              sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+          validationProvider.isInTime
+              ? apis.getStudentList().then((value) {
+                  validationProvider.setStudents(sharedPrefs.studentList);
+                  setState(() {
+                    isDataLoading = false;
+                  });
+                }).catchError((err) {
+                  setState(() {
+                    isDataLoading = false;
+                  });
+                })
+              : null;
+          setState(() {
+            isDataLoading = false;
+          });
+        }).catchError((err) {
+          validationProvider.validateTime(
+              sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+          validationProvider.setStudents(sharedPrefs.studentList);
+          setState(() {
+            isDataLoading = false;
+          });
         });
-      }).catchError((err) {
-        validationProvider.validateTime(
-            sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
-        validationProvider.setStudents(sharedPrefs.studentList);
-        setState(() {
-          isDataLoading = false;
-        });
-      });
+      }
     }
 
     return Scaffold(
@@ -110,23 +115,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   // app name
-                  RichText(
-                    text: const TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Class',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                          TextSpan(
-                            text: 'Mate',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ],
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
+                 Image.asset("assets/title_logo.png"),
                   const SizedBox(
                     height: 50,
                   ),
@@ -159,18 +148,45 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                   ),
                   // Text(sharedPrefs.funcFeedback),
                   SizedBox(
-                    height: size.height * .3,
+                    height: size.height * .15,
+                  ),
+
+                  // Previous attendance status
+                  sharedPrefs.funcFeedback == "No Feedback"
+                      ? const Text(
+                          "Please connect to internet to push previous attendance first!",
+                          style: TextStyle(color: Colors.red),
+                        )
+                      : sharedPrefs.funcFeedback == "Error"
+                          ? const Text(
+                              "Previous attendance was not marked due to out of location",
+                              style: TextStyle(color: Colors.orange),
+                            )
+                          : const SizedBox(),
+
+                  sharedPrefs.funcFeedback == "Successful"
+                      ? const Text(
+                          "Previous attendance marked Successfully",
+                          style: TextStyle(
+                            color: Colors.green,
+                          ),
+                        )
+                      : const SizedBox(),
+                  const SizedBox(
+                    height: 20,
                   ),
 
                   // alert
                   isDataLoading
                       ? const SizedBox()
-                      : status.isInTime
+                      : status.isInTime &&
+                              sharedPrefs.funcFeedback != "No Feedback"
                           ? const Text(
                               "You can mark attendace!",
                               style: TextStyle(color: Colors.green),
                             )
-                          : sharedPrefs.validTime.isNotEmpty
+                          : sharedPrefs.validTime.isNotEmpty &&
+                                  sharedPrefs.funcFeedback != "No Feedback"
                               ? const Text(
                                   "Sorry, Please mark attendace in given time.",
                                   style: TextStyle(color: Colors.red),

@@ -14,7 +14,7 @@ class SharedPrefs {
   String get studentList => _sharedPrefs.getString(studentListKey) ?? "";
   List<String> get validTime => _sharedPrefs.getStringList(validTimeKey) ?? [];
   String get funcFeedback =>
-      _sharedPrefs.getString(funcFeedbackKey) ?? "No Feedback";
+      _sharedPrefs.getString(funcFeedbackKey) ?? "New";
 
   //  Student info
   String get studentId => _sharedPrefs.getString(studentIdKey) ?? "";

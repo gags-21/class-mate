@@ -8,6 +8,8 @@ class ValidationsProvider extends ChangeNotifier {
   // for internet
   bool _isInternet = false;
   bool _isInTime = false;
+  bool _isSubmittedSuccess = false;
+  bool _isSubmittedFailed = false;
 
   // students
   List<StudentsList> _studentsList = [];
@@ -15,6 +17,8 @@ class ValidationsProvider extends ChangeNotifier {
   bool get isInternet => _isInternet;
   bool get isInTime => _isInTime;
   List<StudentsList> get students => _studentsList;
+  bool get isSubmittedSuccess => _isSubmittedSuccess;
+  bool get isSubmittedFailed => _isSubmittedFailed;
 
   void internetAvailability() {
     var result = InternetConnectionChecker().onStatusChange.listen((status) {
@@ -75,5 +79,21 @@ class ValidationsProvider extends ChangeNotifier {
     }).toList();
     _studentsList = list;
     notifyListeners();
+  }
+
+  void submission(int submission) {
+    if (submission == 1) {
+      _isSubmittedFailed = false;
+      _isSubmittedSuccess = true;
+      notifyListeners();
+    } else if (submission == 2) {
+      _isSubmittedFailed = true;
+      _isSubmittedSuccess = false;
+      notifyListeners();
+    } else if (submission == 0) {
+      _isSubmittedFailed = false;
+      _isSubmittedSuccess = false;
+      notifyListeners();
+    }
   }
 }

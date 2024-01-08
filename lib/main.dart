@@ -20,10 +20,10 @@ void callbackDispatcher() {
         selfie: sharedPrefs.selfie,
       )
           .then((value) {
-        sharedPrefs.funcFeedback = "Successful - $value";
+        sharedPrefs.funcFeedback = "Successful";
         return true;
       }).catchError((err) {
-        sharedPrefs.funcFeedback = "nott Successful - $err";
+        sharedPrefs.funcFeedback = "Error";
         return false;
       });
     }

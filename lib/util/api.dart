@@ -12,8 +12,8 @@ class UserApi {
       "passkey": api_key,
     }).then((value) async {
       final time = json.decode(value.body)["AttendanceTime"];
-       sharedPrefs.validTime = [time["start_time"], time["end_time"]];
-      // sharedPrefs.validTime = ["21:00:00", "23:30:00"];
+      sharedPrefs.validTime = [time["start_time"], time["end_time"]];
+      // sharedPrefs.validTime = ["10:00:00", "23:30:00"];
     }).catchError((err) {
       throw "Error";
     });
@@ -50,6 +50,7 @@ class UserApi {
         "https://www.bcaeducation.com/lms/api/student/attendance/store");
     try {
       var response = await http.post(uri, body: info);
+      print("Response - ${response.body}");
       if (response.statusCode == 200) {
         return response.body;
       } else {
