@@ -214,7 +214,7 @@ class _AttendancePageState extends State<AttendancePage> {
                                 ),
                               ),
                               child: const Text(
-                                'Upload',
+                                'Mark Attendance',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
