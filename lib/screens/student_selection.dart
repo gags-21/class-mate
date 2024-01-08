@@ -78,7 +78,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                         : "No data",
                 textAlign: TextAlign.center,
               ),
-              Text(sharedPrefs.funcFeedback),
+              // Text(sharedPrefs.funcFeedback),
               const Spacer(),
               isDataLoading
                   ? const SizedBox()
@@ -161,79 +161,81 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
               ),
 
               // next btn with internet indicator
-              Padding(
-                padding: const EdgeInsets.all(30),
-                child: Stack(
-                  fit: StackFit.loose,
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Positioned(
-                      bottom: 0,
-                      child: Container(
-                        width: 280,
-                        height: 30,
-                        padding: const EdgeInsets.only(top: 10),
-                        decoration: BoxDecoration(
-                          color: status.isInternet ? Colors.green : Colors.red,
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(10.0),
-                            bottomRight: Radius.circular(10.0),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Stack(
+                    fit: StackFit.loose,
+                    alignment: Alignment.topCenter,
+                    children: [
+                      Positioned(
+                        bottom: 0,
+                        child: Container(
+                          width: 280,
+                          height: 30,
+                          padding: const EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            color: status.isInternet ? Colors.green : Colors.red,
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0),
+                            ),
                           ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            status.isInternet
-                                ? "Connected to network"
-                                : "Disconnected from network",
-                            style: const TextStyle(
-                              color: Colors.white,
+                          child: Center(
+                            child: Text(
+                              status.isInternet
+                                  ? "Connected to network"
+                                  : "Disconnected from network",
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: FilledButton.tonal(
-                        onPressed: () {
-                          isDataLoading
-                              ? null
-                              : validName && id != null
-                                  ? status.isInTime
-                                      ? Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const AttendancePage()),
-                                        )
-                                      : null
-                                  : ScaffoldMessenger.of(context)
-                                      .showSnackBar(snack);
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: FilledButton.tonal(
+                          onPressed: () {
                             isDataLoading
-                                ? Colors.grey.shade600
-                                : status.isInTime
-                                    ? Colors.blueAccent
-                                    : Colors.red,
-                          ),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
+                                ? null
+                                : validName && id != null
+                                    ? status.isInTime
+                                        ? Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AttendancePage()),
+                                          )
+                                        : null
+                                    : ScaffoldMessenger.of(context)
+                                        .showSnackBar(snack);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              isDataLoading
+                                  ? Colors.grey.shade600
+                                  : status.isInTime
+                                      ? Colors.blueAccent
+                                      : Colors.red,
+                            ),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            minimumSize: MaterialStateProperty.all(
+                              const Size(300, 50),
                             ),
                           ),
-                          minimumSize: MaterialStateProperty.all(
-                            const Size(300, 50),
+                          child: const Text(
+                            'NEXT',
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
-                        child: const Text(
-                          'NEXT',
-                          style: TextStyle(color: Colors.white),
-                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(

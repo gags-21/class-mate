@@ -23,7 +23,15 @@ class _AttendancePageState extends State<AttendancePage> {
   File? image;
   Future pickImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      final image = await ImagePicker()
+          .pickImage(
+        source: ImageSource.camera,
+        preferredCameraDevice: CameraDevice.front,
+      )
+          .then((value) {
+        if (value != null) sharedPrefs.selfieFile = File(value.path);
+        return value;
+      });
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);
@@ -45,6 +53,33 @@ class _AttendancePageState extends State<AttendancePage> {
       setState(() {
         stateLoading = false;
       });
+    }).catchError((error) {
+      switch (error) {
+        case "Location services are disabled.":
+          {
+            var snack = const SnackBar(
+                content: Text("Please enable location services to proceed."));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+            Navigator.pop(context);
+          }
+
+        case "Location permissions are permanently denied, we cannot request permissions.":
+          {
+            var snack = const SnackBar(
+                content: Text(
+                    "Location permissions are permanently denied, please give permissions to proceed."));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+            Navigator.pop(context);
+          }
+
+        case "Location permissions are denied":
+          {
+            var snack = const SnackBar(
+                content: Text("Please give location permission to proceed."));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+            Navigator.pop(context);
+          }
+      }
     });
   }
 
@@ -54,8 +89,8 @@ class _AttendancePageState extends State<AttendancePage> {
     super.dispose();
   }
 
-  void backgroundTask() {
-    Workmanager().registerOneOffTask("imageUpload", "uploadImg",
+  Future<void> backgroundTask() async {
+    await Workmanager().registerOneOffTask("imageUpload", "uploadImg",
         constraints: Constraints(networkType: NetworkType.connected));
   }
 
@@ -129,10 +164,8 @@ class _AttendancePageState extends State<AttendancePage> {
                                     ? Colors.green
                                     : Colors.red,
                                 borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(
-                                      10.0), // Adjust the radius as needed
-                                  bottomRight: Radius.circular(
-                                      10.0), // Adjust the radius as needed
+                                  bottomLeft: Radius.circular(10.0),
+                                  bottomRight: Radius.circular(10.0),
                                 ),
                               ),
                               child: Center(
@@ -152,14 +185,12 @@ class _AttendancePageState extends State<AttendancePage> {
                             child: FilledButton.tonal(
                               onPressed: () {
                                 if (image != null) {
-                                  // if (status.isInternet) {
-                                    // call upload func
-
-                                    backgroundTask();
-
-                                    // } else {
-                                    // call offline func
-                                  // }
+                                  backgroundTask().then((value) {
+                                    var snack = const SnackBar(
+                                        content: Text("Attendance Pushed!!"));
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snack);
+                                  });
                                 } else {
                                   var snack = const SnackBar(
                                       content:
@@ -167,11 +198,6 @@ class _AttendancePageState extends State<AttendancePage> {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(snack);
                                 }
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //       builder: (context) => const AttendancePage()),
-                                // );
                               },
                               style: ButtonStyle(
                                 backgroundColor: image == null

@@ -37,12 +37,14 @@ class UserApi {
     required String id,
     required String lat,
     required String long,
+    required String selfie,
   }) async {
     Map info = {
       "passkey": api_key,
       "student_id": id,
       "latitude": lat,
       "longitude": long,
+      "file": selfie,
     };
     var uri = Uri.parse(
         "https://www.bcaeducation.com/lms/api/student/attendance/store");

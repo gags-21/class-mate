@@ -14,9 +14,11 @@ void callbackDispatcher() {
       // print("Uploading? ${sharedPrefs.studentId} ${sharedPrefs.lat} ${sharedPrefs.long}");
       await UserApi()
           .sendStudentInfo(
-              id: sharedPrefs.studentId,
-              lat: sharedPrefs.lat,
-              long: sharedPrefs.long)
+        id: sharedPrefs.studentId,
+        lat: sharedPrefs.lat,
+        long: sharedPrefs.long,
+        selfie: sharedPrefs.selfie,
+      )
           .then((value) {
         sharedPrefs.funcFeedback = "Successful - $value";
         return true;
