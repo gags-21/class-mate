@@ -50,14 +50,15 @@ class UserApi {
         "https://www.bcaeducation.com/lms/api/student/attendance/store");
     try {
       var response = await http.post(uri, body: info);
-      print("Response - ${response.body}");
       if (response.statusCode == 200) {
+        sharedPrefs.funcFeedback = "Successful";
         return response.body;
       } else {
-        throw Exception(response.body);
+        sharedPrefs.funcFeedback = json.decode(response.body)["message"];
+        throw json.decode(response.body)["message"];
       }
     } catch (e) {
-      throw "error - $e";
+      throw sharedPrefs.funcFeedback;
     }
   }
 }

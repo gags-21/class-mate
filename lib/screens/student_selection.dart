@@ -121,7 +121,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
         child: Consumer<ValidationsProvider>(builder: (context, status, _) {
           return SingleChildScrollView(
             child: SizedBox(
-              height: size.height * 0.85,
+              height: size.height * 0.88,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -159,31 +159,31 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                     ],
                   ),
                   SizedBox(
-                    height: size.height * .13,
+                    height: size.height * .25,
                   ),
 
                   // Previous attendance status
-                  sharedPrefs.funcFeedback == "No Feedback"
-                      ? const Text(
-                          "Please connect to internet to push previous attendance first!",
-                          style: TextStyle(color: Colors.red),
-                        )
-                      : Text(
-                          sharedPrefs.funcFeedback,
-                          style: TextStyle(color: Colors.orange),
-                        ),
+                  // sharedPrefs.funcFeedback == "No Feedback"
+                  //     ? const Text(
+                  //         "Please connect to internet to push previous attendance first!",
+                  //         style: TextStyle(color: Colors.red),
+                  //       )
+                  //     : Text(
+                  //         sharedPrefs.funcFeedback,
+                  //         style: TextStyle(color: Colors.orange),
+                  //       ),
 
-                  sharedPrefs.funcFeedback == "Successful"
-                      ? const Text(
-                          "Previous attendance marked Successfully",
-                          style: TextStyle(
-                            color: Colors.green,
-                          ),
-                        )
-                      : const SizedBox(),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  // sharedPrefs.funcFeedback == "Successful"
+                  //     ? const Text(
+                  //         "Previous attendance marked Successfully",
+                  //         style: TextStyle(
+                  //           color: Colors.green,
+                  //         ),
+                  //       )
+                  //     : const SizedBox(),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
 
                   // alert
                   isDataLoading
@@ -270,7 +270,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
 
                   // next btn with internet indicator
                   Padding(
-                    padding: const EdgeInsets.all(30),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Stack(
                       fit: StackFit.loose,
                       alignment: Alignment.topCenter,

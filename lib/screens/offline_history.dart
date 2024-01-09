@@ -15,25 +15,32 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: sharedPrefs.funcFeedback == "No Feedback" ? false : true,
       onPopInvoked: (didPop) {
         DateTime now = DateTime.now();
-        if (currentBackPressTime == null ||
-            now.difference(currentBackPressTime ?? DateTime.now()) >
-                const Duration(seconds: 2)) {
-          currentBackPressTime = now;
-          var snack = const SnackBar(
-              content: Text("Press Backbutton again to exit app"));
-          ScaffoldMessenger.of(context).showSnackBar(snack);
-          return;
+        if (sharedPrefs.funcFeedback == "No Feedback") {
+          if (currentBackPressTime == null ||
+              now.difference(currentBackPressTime ?? DateTime.now()) >
+                  const Duration(seconds: 2)) {
+            currentBackPressTime = now;
+            var snack = const SnackBar(
+                content: Text("Press Backbutton again to exit app"));
+            ScaffoldMessenger.of(context).showSnackBar(snack);
+            return;
+          }
+           exit(0);
         }
-        exit(0);
+       
       },
       child: Scaffold(
-        appBar: AppBar(
-          leading: const SizedBox(),
-          title: const Text("Offline History"),
-        ),
+        appBar: sharedPrefs.funcFeedback == "No Feedback"
+            ? AppBar(
+                leading: const SizedBox(),
+                title: const Text("Offline History"),
+              )
+            : AppBar(
+                title: const Text("Offline History"),
+              ),
         body: Center(
           child: sharedPrefs.funcFeedback == "No Feedback"
               ? Consumer<ValidationsProvider>(builder: (context, status, _) {
