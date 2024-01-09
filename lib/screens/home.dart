@@ -96,7 +96,7 @@ class _AttendancePageState extends State<AttendancePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext mainContext) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF4586f5),
@@ -119,6 +119,16 @@ class _AttendancePageState extends State<AttendancePage> {
                           height: 20,
                         ),
 
+                        // student info
+
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            sharedPrefs.studentName,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ),
+
                         // upload img
                         image == null
                             ? GestureDetector(
@@ -136,10 +146,23 @@ class _AttendancePageState extends State<AttendancePage> {
                                     ),
                                   ),
                                   child: const Center(
-                                    child: Icon(
-                                      Icons.camera_front_outlined,
-                                      color: Colors.grey,
-                                      size: 50,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.camera_front_outlined,
+                                          color: Colors.grey,
+                                          size: 50,
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          "Tap to capture image",
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 15),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -187,34 +210,63 @@ class _AttendancePageState extends State<AttendancePage> {
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: FilledButton.tonal(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     if (image != null) {
                                       sharedPrefs.funcFeedback = "No Feedback";
-                                      backgroundTask().then((value) {
-                                        if (status.isInternet) {
-                                          var snack = const SnackBar(
-                                              content:
-                                                  Text("Attendance Pushed!!"));
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(snack);
-                                          status.submission(1);
-                                          Future.delayed(
-                                              const Duration(seconds: 3), () {
-                                            exit(0);
-                                          });
-                                        } else {
+                                      if (!status.isInternet) {
+                                        backgroundTask().then((value) {
                                           var snack = const SnackBar(
                                               content: Text(
-                                                  "Attendance will be pushed once you connect to internet."));
-                                          ScaffoldMessenger.of(context)
+                                                  "Attendance will be pushed once you connect to net"));
+                                          ScaffoldMessenger.of(mainContext)
                                               .showSnackBar(snack);
                                           status.submission(2);
                                           Future.delayed(
                                               const Duration(seconds: 3), () {
-                                            exit(0);
+                                            // exit(0);
                                           });
-                                        }
-                                      });
+                                        });
+                                      } else {
+                                        setState(() {
+                                          stateLoading = true;
+                                        });
+                                        await UserApi()
+                                            .sendStudentInfo(
+                                                id: sharedPrefs.studentId,
+                                                lat: sharedPrefs.lat,
+                                                long: sharedPrefs.long,
+                                                selfie: sharedPrefs.selfie)
+                                            .then((value) {
+                                          var snack = const SnackBar(
+                                              content:
+                                                  Text("Attendance Pushed!!"));
+
+                                          status.submission(1);
+                                          print("Nott??");
+                                          setState(() {
+                                            stateLoading = false;
+                                          });
+                                          Future.delayed(
+                                              const Duration(seconds: 1), () {
+                                            ScaffoldMessenger.of(mainContext)
+                                                .showSnackBar(snack);
+                                          });
+                                        }).catchError((e) {
+                                          var snack = SnackBar(
+                                              content: Text(e.toString()));
+
+                                          status.submission(2);
+                                          print("Nott coming??");
+                                          setState(() {
+                                            stateLoading = false;
+                                          });
+                                          Future.delayed(
+                                              const Duration(seconds: 1), () {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(snack);
+                                          });
+                                        });
+                                      }
                                     } else {
                                       var snack = const SnackBar(
                                           content: Text(
@@ -257,8 +309,8 @@ class _AttendancePageState extends State<AttendancePage> {
                             color: Colors.black.withAlpha(100),
                             height: double.infinity,
                             width: double.infinity,
-                            child:
-                                Lottie.asset("assets/success_animation.json"),
+                            child: Lottie.asset("assets/success_animation.json",
+                                repeat: false),
                           )
                         : const SizedBox(),
                     status.isSubmittedFailed
@@ -266,11 +318,43 @@ class _AttendancePageState extends State<AttendancePage> {
                             color: Colors.black.withAlpha(100),
                             height: double.infinity,
                             width: double.infinity,
-                            child: Lottie.asset("assets/error_animation.json"),
+                            child: Lottie.asset("assets/error_animation.json",
+                                repeat: false),
                           )
                         : const SizedBox(),
 
-                        // exit button
+                    //  button to got home
+                    status.isSubmittedSuccess || status.isSubmittedFailed
+                        ? Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 70),
+                              child: FilledButton.tonal(
+                                onPressed: () {
+                                  status.submission(0);
+                                  Navigator.pop(context);
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.blueAccent),
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  minimumSize: MaterialStateProperty.all(
+                                    const Size(300, 50),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Go To Home',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+
                   ],
                 );
               }),
