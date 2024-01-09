@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:image_upload/constants/shared_prefs_keys.dart';
+import 'package:image_upload/modals/student_modal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
@@ -13,10 +14,10 @@ class SharedPrefs {
 
   String get studentList => _sharedPrefs.getString(studentListKey) ?? "";
   List<String> get validTime => _sharedPrefs.getStringList(validTimeKey) ?? [];
-  String get funcFeedback =>
-      _sharedPrefs.getString(funcFeedbackKey) ?? "New";
+  String get funcFeedback => _sharedPrefs.getString(funcFeedbackKey) ?? "New";
 
   //  Student info
+  String get studentName => _sharedPrefs.getString(studentNameKey) ?? "";
   String get studentId => _sharedPrefs.getString(studentIdKey) ?? "";
   String get lat => _sharedPrefs.getString(userLatKey) ?? "";
   String get long => _sharedPrefs.getString(userLongKey) ?? "";
@@ -35,8 +36,9 @@ class SharedPrefs {
     _sharedPrefs.setString(studentListKey, students);
   }
 
-  set studentId(String id) {
-    _sharedPrefs.setString(studentIdKey, id);
+  set student(StudentsList student) {
+    _sharedPrefs.setString(studentIdKey, student.id.toString());
+    _sharedPrefs.setString(studentNameKey, student.name);
   }
 
   set funcFeedback(String feedback) {

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:image_upload/provider/validations_provider.dart';
 import 'package:image_upload/screens/home.dart';
+import 'package:image_upload/screens/offline_history.dart';
 import 'package:image_upload/util/api.dart';
 import 'package:image_upload/util/shared_prefs.dart';
+import 'package:image_upload/widgets/components.dart';
 import 'package:provider/provider.dart';
 
 class StudentSelectPage extends StatefulWidget {
@@ -58,6 +60,13 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
             isDataLoading = false;
           });
         });
+      } else if (sharedPrefs.funcFeedback == "No Feedback") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HistoryScreen(),
+          ),
+        );
       }
     });
   }
@@ -72,8 +81,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
       setState(() {
         isDataLoading = true;
       });
-      if (sharedPrefs.funcFeedback != "No Feedback" &&
-          validationProvider.isInternet) {
+      if (validationProvider.isInternet) {
         apis.getValidateTime().then((value) {
           validationProvider.validateTime(
               sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
@@ -104,18 +112,22 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
     }
 
     return Scaffold(
-      // appBar: AppBar(),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
+      drawer: const MainDrawer(),
       body: Center(
         child: Consumer<ValidationsProvider>(builder: (context, status, _) {
           return SingleChildScrollView(
             child: SizedBox(
-              height: size.height,
+              height: size.height * 0.85,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   // app name
-                 Image.asset("assets/title_logo.png"),
+                  Image.asset("assets/title_logo.png"),
                   const SizedBox(
                     height: 50,
                   ),
@@ -146,9 +158,8 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                       )
                     ],
                   ),
-                  // Text(sharedPrefs.funcFeedback),
                   SizedBox(
-                    height: size.height * .15,
+                    height: size.height * .13,
                   ),
 
                   // Previous attendance status
@@ -157,12 +168,10 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                           "Please connect to internet to push previous attendance first!",
                           style: TextStyle(color: Colors.red),
                         )
-                      : sharedPrefs.funcFeedback == "Error"
-                          ? const Text(
-                              "Previous attendance was not marked due to out of location",
-                              style: TextStyle(color: Colors.orange),
-                            )
-                          : const SizedBox(),
+                      : Text(
+                          sharedPrefs.funcFeedback,
+                          style: TextStyle(color: Colors.orange),
+                        ),
 
                   sharedPrefs.funcFeedback == "Successful"
                       ? const Text(
@@ -185,8 +194,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                               "You can mark attendace!",
                               style: TextStyle(color: Colors.green),
                             )
-                          : sharedPrefs.validTime.isNotEmpty &&
-                                  sharedPrefs.funcFeedback != "No Feedback"
+                          : sharedPrefs.validTime.isNotEmpty
                               ? const Text(
                                   "Sorry, Please mark attendace in given time.",
                                   style: TextStyle(color: Colors.red),
@@ -212,7 +220,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                           validName = status.students.any((s) {
                             if (s.name == textEditingController.text) {
                               id = s.id;
-                              sharedPrefs.studentId = s.id.toString();
+                              sharedPrefs.student = s;
                               return true;
                             }
                             return false;
