@@ -5,6 +5,7 @@ import 'package:image_upload/screens/offline_history.dart';
 import 'package:image_upload/util/api.dart';
 import 'package:image_upload/util/shared_prefs.dart';
 import 'package:image_upload/widgets/components.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class StudentSelectPage extends StatefulWidget {
@@ -119,6 +120,17 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
       drawer: const MainDrawer(),
       body: Center(
         child: Consumer<ValidationsProvider>(builder: (context, status, _) {
+          // converting time to 12 hours
+          DateTime startTime = sharedPrefs.validTime.isEmpty
+              ? DateTime.now()
+              : DateFormat('HH:mm:ss').parse(sharedPrefs.validTime[0]);
+          DateTime endTime = sharedPrefs.validTime.isEmpty
+              ? DateTime.now()
+              : DateFormat('HH:mm:ss').parse(sharedPrefs.validTime[1]);
+
+          String startTime12 = DateFormat('hh:mm:ss a').format(startTime);
+          String endTime12 = DateFormat('hh:mm:ss a').format(endTime);
+
           return SingleChildScrollView(
             child: SizedBox(
               height: size.height * 0.88,
@@ -141,7 +153,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                         isDataLoading
                             ? "Fetching Attendance timing"
                             : sharedPrefs.validTime.isNotEmpty
-                                ? "Today's Attendance Time  \n ${sharedPrefs.validTime[0]} to ${sharedPrefs.validTime[1]}"
+                                ? "Today's Attendance Time  \n $startTime12 to $endTime12"
                                 : "No data",
                         textAlign: TextAlign.center,
                       ),
