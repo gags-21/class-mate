@@ -10,6 +10,7 @@ class ValidationsProvider extends ChangeNotifier {
   bool _isInTime = false;
   bool _isSubmittedSuccess = false;
   bool _isSubmittedFailed = false;
+  bool _isDataLoading = false;
 
   // students
   List<StudentsList> _studentsList = [];
@@ -19,6 +20,7 @@ class ValidationsProvider extends ChangeNotifier {
   List<StudentsList> get students => _studentsList;
   bool get isSubmittedSuccess => _isSubmittedSuccess;
   bool get isSubmittedFailed => _isSubmittedFailed;
+  bool get dataLoading => _isDataLoading;
 
   void internetAvailability() {
     var result = InternetConnectionChecker().onStatusChange.listen((status) {
@@ -33,6 +35,11 @@ class ValidationsProvider extends ChangeNotifier {
           break;
       }
     });
+  }
+
+  void loaderSwitcher(bool loading) {
+    _isDataLoading = loading;
+    notifyListeners();
   }
 
   bool validateTime(String startTime, String endTime) {

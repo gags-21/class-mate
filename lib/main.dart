@@ -23,7 +23,7 @@ void callbackDispatcher() {
         sharedPrefs.funcFeedback = "Successful";
         return true;
       }).catchError((err) {
-        sharedPrefs.funcFeedback = "Error";
+        sharedPrefs.funcFeedback = err;
         return false;
       });
     }

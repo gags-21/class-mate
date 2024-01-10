@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:image_upload/api_key.dart';
@@ -39,25 +40,33 @@ class UserApi {
     required String long,
     required String selfie,
   }) async {
-    Map info = {
+    Map<String, String> info = {
       "passkey": api_key,
       "student_id": id,
       "latitude": lat,
       "longitude": long,
       "file": selfie,
     };
+    // log("Pushing => $id, $lat, $long, $selfie");
     var uri = Uri.parse(
         "https://www.bcaeducation.com/lms/api/student/attendance/store");
     try {
-      var response = await http.post(uri, body: info);
+      var response = await http.post(
+        uri,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(info),
+      );
       if (response.statusCode == 200) {
         sharedPrefs.funcFeedback = "Successful";
+        print("Error not cominn coming ? ${response.body}");
         return response.body;
       } else {
+        // log("Error coming ? ${response.body}");
         sharedPrefs.funcFeedback = json.decode(response.body)["message"];
         throw json.decode(response.body)["message"];
       }
     } catch (e) {
+      // print("Catching this error - ${sharedPrefs.funcFeedback}");
       throw sharedPrefs.funcFeedback;
     }
   }

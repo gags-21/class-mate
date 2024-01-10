@@ -28,9 +28,8 @@ class HistoryScreen extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(snack);
             return;
           }
-           exit(0);
+          exit(0);
         }
-       
       },
       child: Scaffold(
         appBar: sharedPrefs.funcFeedback == "No Feedback"
@@ -118,28 +117,36 @@ class HistoryScreen extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: FilledButton.tonal(
-                                  onPressed: () {
-                                    sharedPrefs.funcFeedback = "No Feedback";
-                                    UserApi()
-                                        .sendStudentInfo(
-                                            id: sharedPrefs.studentId,
-                                            lat: sharedPrefs.lat,
-                                            long: sharedPrefs.long,
-                                            selfie: sharedPrefs.selfie)
-                                        .then((value) {
-                                      var snack = const SnackBar(
-                                          content: Text("Attendance Pushed!!"));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snack);
-                                      status.submission(1);
-                                    }).catchError((e) {
-                                      var snack =
-                                          SnackBar(content: Text(e.toString()));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(snack);
-                                      status.submission(2);
-                                    });
-                                  },
+                                  onPressed: status.isInternet
+                                      ? () {
+                                          sharedPrefs.funcFeedback =
+                                              "No Feedback";
+
+                                          status.loaderSwitcher(true);
+                                          UserApi()
+                                              .sendStudentInfo(
+                                                  id: sharedPrefs.studentId,
+                                                  lat: sharedPrefs.lat,
+                                                  long: sharedPrefs.long,
+                                                  selfie: sharedPrefs.selfie)
+                                              .then((value) {
+                                            var snack = const SnackBar(
+                                                content: Text(
+                                                    "Attendance Pushed!!"));
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(snack);
+                                            status.submission(1);
+                                            status.loaderSwitcher(false);
+                                          }).catchError((e) {
+                                            var snack = SnackBar(
+                                                content: Text(e.toString()));
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(snack);
+                                            status.submission(2);
+                                            status.loaderSwitcher(false);
+                                          });
+                                        }
+                                      : () {},
                                   style: ButtonStyle(
                                     backgroundColor: !(status.isInternet)
                                         ? MaterialStateProperty.all(Colors.grey)
@@ -165,6 +172,14 @@ class HistoryScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      status.dataLoading
+                          ? Container(
+                              color: Colors.black.withAlpha(100),
+                              height: double.infinity,
+                              width: double.infinity,
+                              child: const Center(child: CircularProgressIndicator()),
+                            )
+                          : const SizedBox(),
                       status.isSubmittedSuccess
                           ? Container(
                               color: Colors.black.withAlpha(100),
@@ -172,6 +187,17 @@ class HistoryScreen extends StatelessWidget {
                               width: double.infinity,
                               child: Lottie.asset(
                                 "assets/success_animation.json",
+                                repeat: false,
+                              ),
+                            )
+                          : const SizedBox(),
+                           status.isSubmittedFailed
+                          ? Container(
+                              color: Colors.black.withAlpha(100),
+                              height: double.infinity,
+                              width: double.infinity,
+                              child: Lottie.asset(
+                                "assets/error_animation.json",
                                 repeat: false,
                               ),
                             )

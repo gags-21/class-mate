@@ -216,20 +216,15 @@ class _AttendancePageState extends State<AttendancePage> {
                                       if (!status.isInternet) {
                                         backgroundTask().then((value) {
                                           var snack = const SnackBar(
-                                              content: Text(
-                                                  "Attendance will be pushed once you connect to net"));
+                                            content: Text(
+                                                "Attendance will be pushed once you connect to net"),
+                                          );
                                           ScaffoldMessenger.of(mainContext)
                                               .showSnackBar(snack);
                                           status.submission(2);
-                                          Future.delayed(
-                                              const Duration(seconds: 3), () {
-                                            // exit(0);
-                                          });
                                         });
                                       } else {
-                                        setState(() {
-                                          stateLoading = true;
-                                        });
+                                        status.loaderSwitcher(true);
                                         await UserApi()
                                             .sendStudentInfo(
                                                 id: sharedPrefs.studentId,
@@ -242,10 +237,7 @@ class _AttendancePageState extends State<AttendancePage> {
                                                   Text("Attendance Pushed!!"));
 
                                           status.submission(1);
-                                          print("Nott??");
-                                          setState(() {
-                                            stateLoading = false;
-                                          });
+                                          status.loaderSwitcher(false);
                                           Future.delayed(
                                               const Duration(seconds: 1), () {
                                             ScaffoldMessenger.of(mainContext)
@@ -256,15 +248,9 @@ class _AttendancePageState extends State<AttendancePage> {
                                               content: Text(e.toString()));
 
                                           status.submission(2);
-                                          print("Nott coming??");
-                                          setState(() {
-                                            stateLoading = false;
-                                          });
-                                          Future.delayed(
-                                              const Duration(seconds: 1), () {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(snack);
-                                          });
+                                          status.loaderSwitcher(false);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snack);
                                         });
                                       }
                                     } else {
@@ -304,6 +290,19 @@ class _AttendancePageState extends State<AttendancePage> {
                         )
                       ],
                     ),
+
+                    // loader
+                    status.dataLoading
+                        ? Container(
+                            color: Colors.black.withAlpha(100),
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: const Center(
+                                child: CircularProgressIndicator()),
+                          )
+                        : const SizedBox(),
+
+                    // animations
                     status.isSubmittedSuccess
                         ? Container(
                             color: Colors.black.withAlpha(100),
@@ -354,7 +353,6 @@ class _AttendancePageState extends State<AttendancePage> {
                             ),
                           )
                         : const SizedBox(),
-
                   ],
                 );
               }),

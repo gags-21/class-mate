@@ -113,8 +113,8 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFF4586f5),
+        foregroundColor: Colors.white,
       ),
       drawer: const MainDrawer(),
       body: Center(
