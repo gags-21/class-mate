@@ -113,10 +113,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF4586f5),
-        foregroundColor: Colors.white,
-      ),
+      appBar: AppBar(),
       drawer: const MainDrawer(),
       body: Center(
         child: Consumer<ValidationsProvider>(builder: (context, status, _) {

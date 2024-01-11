@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_upload/screens/about_screen.dart';
 import 'package:image_upload/screens/offline_history.dart';
 import 'package:image_upload/screens/policy_screen.dart';
 
@@ -50,6 +51,14 @@ class MainDrawer extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const PolicyScreen())),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.info_outline),
+                  title: const Text("About"),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AboutScreen())),
                 ),
               ],
             ),

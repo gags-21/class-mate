@@ -99,8 +99,6 @@ class _AttendancePageState extends State<AttendancePage> {
   Widget build(BuildContext mainContext) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF4586f5),
-        foregroundColor: Colors.white,
         title: const Text("Mark Attendance"),
       ),
       body: Center(

@@ -35,6 +35,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await sharedPrefs.init();
   await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  await Future.delayed(const Duration(seconds: 2));
   runApp(const MyApp());
 }
 
@@ -52,6 +53,10 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
           useMaterial3: true,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color(0xFF4586f5),
+            foregroundColor: Colors.white,
+          ),
         ),
         home: const StudentSelectPage(),
       ),
