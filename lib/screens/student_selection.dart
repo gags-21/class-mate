@@ -24,7 +24,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
 
   // snacks
   var snack =
-      const SnackBar(content: Text("Enter Correct name from suggestions"));
+      const SnackBar(content: Text("Only student's name allowed from system"));
 
   @override
   void initState() {
