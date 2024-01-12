@@ -3,9 +3,34 @@ import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:image_upload/api_key.dart';
+import 'package:image_upload/modals/student_modal.dart';
 import 'package:image_upload/util/shared_prefs.dart';
 
 class UserApi {
+  // login
+  Future<bool> loginWithEmail(String email, String pass) async {
+    var uri = Uri.parse("https://www.bcaeducation.com/lms/api/student/login");
+    try {
+      var response = await http.post(uri, body: {
+        "passkey": api_key,
+        "email": email,
+        "password": pass,
+      });
+      final studentData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        sharedPrefs.student =
+            StudentsList(id: studentData["student_id"], name: studentData["full_name"]);
+        sharedPrefs.loggedIn = true;
+        return true;
+      } else {
+        sharedPrefs.loggedIn = false;
+        throw studentData["message"];
+      }
+    } catch (err) {
+      rethrow;
+    }
+  }
+
   // attendance timing
   Future<void> getValidateTime() async {
     var uri = Uri.parse("https://www.bcaeducation.com/lms/api/attendance-time");

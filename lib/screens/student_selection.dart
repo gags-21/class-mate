@@ -24,7 +24,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
 
   // snacks
   var snack =
-      const SnackBar(content: Text("Only student's name allowed from system"));
+      const SnackBar(content: Text("Please mark attendance in valid"));
 
   @override
   void initState() {
@@ -109,6 +109,13 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
             isDataLoading = false;
           });
         });
+      } else {
+         validationProvider.validateTime(
+              sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+          validationProvider.setStudents(sharedPrefs.studentList);
+          setState(() {
+            isDataLoading = false;
+          });
       }
     }
 
@@ -222,59 +229,68 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                   SizedBox(
                     height: 50,
                     width: 300,
-                    child: Autocomplete(
-                      fieldViewBuilder: (context, textEditingController,
-                          focusNode, onFieldSubmitted) {
-                        textEditingController.addListener(() {
-                          validName = status.students.any((s) {
-                            if (s.name == textEditingController.text) {
-                              id = s.id;
-                              sharedPrefs.student = s;
-                              return true;
-                            }
-                            return false;
-                          });
-                          setState(() {});
-                        });
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            border: Border.all(
-                                color: validName
-                                    ? Colors.black38
-                                    : Colors.redAccent),
-                          ),
-                          child: TextField(
-                            controller: textEditingController,
-                            focusNode: focusNode,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              contentPadding: EdgeInsets.all(10),
-                              hintText: "Enter Student Name",
-                            ),
-                          ),
-                        );
-                      },
-                      optionsBuilder: (TextEditingValue textEditingValue) {
-                        if (textEditingValue.text == '') {
-                          return const Iterable<String>.empty();
-                        } else {
-                          List<String> matches = <String>[];
-                          matches.addAll(
-                            status.students.map((e) => e.name),
-                          );
-                          matches.retainWhere((s) {
-                            return s
-                                .toLowerCase()
-                                .contains(textEditingValue.text.toLowerCase());
-                          });
-                          return matches;
-                        }
-                      },
-                      onSelected: (String selection) {},
+                    child: Center(
+                      child: Text(
+                        sharedPrefs.studentName,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
                     ),
+                    //  Autocomplete(
+                    //   fieldViewBuilder: (context, textEditingController,
+                    //       focusNode, onFieldSubmitted) {
+                    //     textEditingController.text = sharedPrefs.studentName;
+                    //     textEditingController.addListener(() {
+                    //       validName = status.students.any((s) {
+                    //         if (s.name == textEditingController.text) {
+                    //           id = s.id;
+                    //           sharedPrefs.student = s;
+                    //           return true;
+                    //         }
+                    //         return false;
+                    //       });
+                    //       setState(() {});
+                    //     });
+                    //     return Container(
+                    //       decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(10.0),
+                    //         border: Border.all(
+                    //             color: validName
+                    //                 ? Colors.black38
+                    //                 : Colors.redAccent),
+                    //       ),
+                    //       child: TextField(
+                    //         readOnly: true,
+                    //         controller: textEditingController,
+                    //         focusNode: focusNode,
+                    //         decoration: const InputDecoration(
+                    //           border: OutlineInputBorder(
+                    //             borderSide: BorderSide.none,
+                    //           ),
+                    //           contentPadding: EdgeInsets.all(10),
+                    //           hintText: "Enter Student Name",
+                    //         ),
+                    //       ),
+                    //     );
+                    //   },
+                    //   optionsBuilder: (TextEditingValue textEditingValue) {
+                    //     if (textEditingValue.text == '') {
+                    //       return const Iterable<String>.empty();
+                    //     } else {
+                    //       List<String> matches = <String>[];
+                    //       matches.addAll(
+                    //         status.students.map((e) => e.name),
+                    //       );
+                    //       matches.retainWhere((s) {
+                    //         return s
+                    //             .toLowerCase()
+                    //             .contains(textEditingValue.text.toLowerCase());
+                    //       });
+                    //       return matches;
+                    //     }
+                    //   },
+                    //   onSelected: (String selection) {},
+                    // ),
                   ),
 
                   // next btn with internet indicator
@@ -316,15 +332,13 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                             onPressed: () {
                               isDataLoading
                                   ? null
-                                  : validName && id != null
-                                      ? status.isInTime
+                                  :  status.isInTime
                                           ? Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       const AttendancePage()),
                                             )
-                                          : null
                                       : ScaffoldMessenger.of(context)
                                           .showSnackBar(snack);
                             },

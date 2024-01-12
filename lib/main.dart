@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_upload/provider/validations_provider.dart';
+import 'package:image_upload/screens/login_screen.dart';
 import 'package:image_upload/screens/student_selection.dart';
 import 'package:image_upload/util/api.dart';
 import 'package:image_upload/util/shared_prefs.dart';
@@ -34,7 +35,7 @@ void callbackDispatcher() {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await sharedPrefs.init();
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  await Workmanager().initialize(callbackDispatcher);
   await Future.delayed(const Duration(seconds: 2));
   runApp(const MyApp());
 }
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.white,
           ),
         ),
-        home: const StudentSelectPage(),
+        home: sharedPrefs.loggedIn ? const StudentSelectPage() : const LoginScreen(),
       ),
     );
   }

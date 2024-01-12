@@ -320,7 +320,7 @@ class _AttendancePageState extends State<AttendancePage> {
                           )
                         : const SizedBox(),
 
-                    //  button to got home
+                    //  button to go home
                     status.isSubmittedSuccess || status.isSubmittedFailed
                         ? Align(
                             alignment: Alignment.bottomCenter,

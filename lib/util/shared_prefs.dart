@@ -12,6 +12,9 @@ class SharedPrefs {
     _sharedPrefs = await SharedPreferences.getInstance();
   }
 
+  // authentication
+  bool get loggedIn => _sharedPrefs.getBool(loggedInKey) ?? false;
+
   String get studentList => _sharedPrefs.getString(studentListKey) ?? "";
   List<String> get validTime => _sharedPrefs.getStringList(validTimeKey) ?? [];
   String get funcFeedback => _sharedPrefs.getString(funcFeedbackKey) ?? "New";
@@ -22,6 +25,10 @@ class SharedPrefs {
   String get lat => _sharedPrefs.getString(userLatKey) ?? "";
   String get long => _sharedPrefs.getString(userLongKey) ?? "";
   String get selfie => _sharedPrefs.getString(base64SelfieKey) ?? "";
+
+  set loggedIn(bool isLoggedIn) {
+    _sharedPrefs.setBool(loggedInKey, isLoggedIn);
+  }
 
   set userLocation(List<String> location) {
     _sharedPrefs.setString(userLatKey, location[0]);

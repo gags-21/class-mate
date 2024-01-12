@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_upload/screens/about_screen.dart';
+import 'package:image_upload/screens/login_screen.dart';
 import 'package:image_upload/screens/offline_history.dart';
 import 'package:image_upload/screens/policy_screen.dart';
+import 'package:image_upload/util/shared_prefs.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
@@ -13,17 +15,7 @@ class MainDrawer extends StatelessWidget {
     return Drawer(
       child: Stack(
         children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              color: Colors.grey.shade200,
-              height: 40,
-              child: const Center(
-                child: Text("version 1.0"),
-              ),
-            ),
-          ),
+      //   upper menu
           Padding(
             padding: const EdgeInsets.only(top: 20.0, left: 10.0, bottom: 20.0),
             child: ListView(
@@ -59,6 +51,61 @@ class MainDrawer extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const AboutScreen())),
+                ),
+              ],
+            ),
+          ),
+
+          //  lower
+                   Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      sharedPrefs.loggedIn = false;
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                    style: ButtonStyle(
+                      side: MaterialStateProperty.all(
+                        const BorderSide(
+                            color: Colors.red,
+                            width: 1.0,
+                            style: BorderStyle.solid),
+                      ),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      minimumSize: MaterialStateProperty.all(
+                        const Size(300, 50),
+                      ),
+                    ),
+                    child: const Text(
+                      'Logout',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: double.infinity,
+                  color: Colors.grey.shade200,
+                  height: 40,
+                  child: const Center(
+                    child: Text("version 1.0"),
+                  ),
                 ),
               ],
             ),
