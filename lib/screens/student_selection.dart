@@ -23,8 +23,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
   int? id;
 
   // snacks
-  var snack =
-      const SnackBar(content: Text("Please mark attendance in valid"));
+  var snack = const SnackBar(content: Text("Please mark attendance in valid"));
 
   @override
   void initState() {
@@ -110,12 +109,12 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
           });
         });
       } else {
-         validationProvider.validateTime(
-              sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
-          validationProvider.setStudents(sharedPrefs.studentList);
-          setState(() {
-            isDataLoading = false;
-          });
+        validationProvider.validateTime(
+            sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
+        validationProvider.setStudents(sharedPrefs.studentList);
+        setState(() {
+          isDataLoading = false;
+        });
       }
     }
 
@@ -136,107 +135,142 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
           String endTime12 = DateFormat('hh:mm:ss a').format(endTime);
 
           return SingleChildScrollView(
-            child: SizedBox(
-              height: size.height * 0.88,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // app name
-                  Image.asset("assets/title_logo.png"),
-                  const SizedBox(
-                    height: 50,
-                  ),
-
-                  // timing
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        isDataLoading
-                            ? "Fetching Attendance timing"
-                            : sharedPrefs.validTime.isNotEmpty
-                                ? "Today's Attendance Time  \n $startTime12 to $endTime12"
-                                : "No data",
-                        textAlign: TextAlign.center,
-                      ),
-                      IconButton.outlined(
-                        onPressed: () async {
-                          await updateValidTime();
-                        },
-                        iconSize: 20,
-                        icon: const Icon(
-                          Icons.refresh,
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.amber,
+                  border: Border.all(color: Colors.red, width: 3.0)),
+              child: SizedBox(
+                height: size.height * 0.88,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: size.width,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: status.isInternet ? Colors.green : Colors.red,
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(10.0),
+                          bottomRight: Radius.circular(10.0),
                         ),
-                        enableFeedback: true,
-                        tooltip: "Refresh timings",
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: size.height * .25,
-                  ),
-
-                  // Previous attendance status
-                  // sharedPrefs.funcFeedback == "No Feedback"
-                  //     ? const Text(
-                  //         "Please connect to internet to push previous attendance first!",
-                  //         style: TextStyle(color: Colors.red),
-                  //       )
-                  //     : Text(
-                  //         sharedPrefs.funcFeedback,
-                  //         style: TextStyle(color: Colors.orange),
-                  //       ),
-
-                  // sharedPrefs.funcFeedback == "Successful"
-                  //     ? const Text(
-                  //         "Previous attendance marked Successfully",
-                  //         style: TextStyle(
-                  //           color: Colors.green,
-                  //         ),
-                  //       )
-                  //     : const SizedBox(),
-                  // const SizedBox(
-                  //   height: 20,
-                  // ),
-
-                  // alert
-                  isDataLoading
-                      ? const SizedBox()
-                      : status.isInTime &&
-                              sharedPrefs.funcFeedback != "No Feedback"
-                          ? const Text(
-                              "You can mark attendace!",
-                              style: TextStyle(color: Colors.green),
-                            )
-                          : sharedPrefs.validTime.isNotEmpty
-                              ? const Text(
-                                  "Sorry, Please mark attendace in given time.",
-                                  style: TextStyle(color: Colors.red),
-                                )
-                              : const Text(
-                                  "Please connect to internet",
-                                  style: TextStyle(
-                                    color: Colors.orange,
-                                  ),
-                                ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                  // student search
-                  SizedBox(
-                    height: 50,
-                    width: 300,
-                    child: Center(
-                      child: Text(
-                        sharedPrefs.studentName,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      child: Center(
+                        child: Text(
+                          status.isInternet
+                              ? "Connected to network"
+                              : "Disconnected from network",
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
-                    //  Autocomplete(
+                    SizedBox(
+                      height: size.height * 0.05,
+                    ),
+                    // app name
+                    Image.asset("assets/title_logo.png"),
+                    SizedBox(
+                      height: size.height * 0.05,
+                    ),
+
+                    //  greetings
+                    SizedBox(
+                      width: size.width * 0.8,
+                      child: Center(
+                        child: Text(
+                          "Welcome,\n${sharedPrefs.studentName}",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ),
+                    ),
+
+                    const Spacer(),
+                    // timing
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          isDataLoading
+                              ? "Fetching Attendance timing"
+                              : sharedPrefs.validTime.isNotEmpty
+                                  ? "Today's Attendance Time  \n $startTime12 to $endTime12"
+                                  : "No data",
+                          textAlign: TextAlign.center,
+                        ),
+                        IconButton.outlined(
+                          onPressed: () async {
+                            await updateValidTime();
+                          },
+                          iconSize: 20,
+                          icon: const Icon(
+                            Icons.refresh,
+                          ),
+                          enableFeedback: true,
+                          tooltip: "Refresh timings",
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: size.height * 0.05,
+                    ),
+
+                    // Previous attendance status
+                    // sharedPrefs.funcFeedback == "No Feedback"
+                    //     ? const Text(
+                    //         "Please connect to internet to push previous attendance first!",
+                    //         style: TextStyle(color: Colors.red),
+                    //       )
+                    //     : Text(
+                    //         sharedPrefs.funcFeedback,
+                    //         style: TextStyle(color: Colors.orange),
+                    //       ),
+
+                    // sharedPrefs.funcFeedback == "Successful"
+                    //     ? const Text(
+                    //         "Previous attendance marked Successfully",
+                    //         style: TextStyle(
+                    //           color: Colors.green,
+                    //         ),
+                    //       )
+                    //     : const SizedBox(),
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
+
+                    // alert
+                    isDataLoading
+                        ? const SizedBox()
+                        : status.isInTime &&
+                                sharedPrefs.funcFeedback != "No Feedback"
+                            ? const Text(
+                                "You can mark attendace!",
+                                style: TextStyle(color: Colors.green),
+                              )
+                            : sharedPrefs.validTime.isNotEmpty
+                                ? const Text(
+                                    "Sorry, Please mark attendace in given time.",
+                                    style: TextStyle(color: Colors.red),
+                                  )
+                                : const Text(
+                                    "Please connect to internet",
+                                    style: TextStyle(
+                                      color: Colors.orange,
+                                    ),
+                                  ),
+                    SizedBox(
+                      height: size.height * 0.03,
+                    ),
+
+                    // student search
+
+                    // SizedBox(
+                    //   height: 50,
+                    //   width: 300,
+                    //   child:  Autocomplete(
                     //   fieldViewBuilder: (context, textEditingController,
                     //       focusNode, onFieldSubmitted) {
                     //     textEditingController.text = sharedPrefs.studentName;
@@ -291,87 +325,89 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                     //   },
                     //   onSelected: (String selection) {},
                     // ),
-                  ),
+                    // ),
 
-                  // next btn with internet indicator
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Stack(
-                      fit: StackFit.loose,
-                      alignment: Alignment.topCenter,
-                      children: [
-                        Positioned(
-                          bottom: 0,
-                          child: Container(
-                            width: 280,
-                            height: 30,
-                            padding: const EdgeInsets.only(top: 10),
-                            decoration: BoxDecoration(
-                              color:
-                                  status.isInternet ? Colors.green : Colors.red,
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(10.0),
-                                bottomRight: Radius.circular(10.0),
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                status.isInternet
-                                    ? "Connected to network"
-                                    : "Disconnected from network",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: FilledButton.tonal(
-                            onPressed: () {
-                              isDataLoading
-                                  ? null
-                                  :  status.isInTime
-                                          ? Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const AttendancePage()),
-                                            )
-                                      : ScaffoldMessenger.of(context)
-                                          .showSnackBar(snack);
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
+                    // next btn with internet indicator
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Stack(
+                        fit: StackFit.loose,
+                        alignment: Alignment.topCenter,
+                        children: [
+                          // Positioned(
+                          //   bottom: 0,
+                          //   child: Container(
+                          //     width: 280,
+                          //     height: 30,
+                          //     padding: const EdgeInsets.only(top: 10),
+                          //     decoration: BoxDecoration(
+                          //       color: status.isInternet
+                          //           ? Colors.green
+                          //           : Colors.red,
+                          //       borderRadius: const BorderRadius.only(
+                          //         bottomLeft: Radius.circular(10.0),
+                          //         bottomRight: Radius.circular(10.0),
+                          //       ),
+                          //     ),
+                          //     child: Center(
+                          //       child: Text(
+                          //         status.isInternet
+                          //             ? "Connected to network"
+                          //             : "Disconnected from network",
+                          //         style: const TextStyle(
+                          //           color: Colors.white,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: FilledButton.tonal(
+                              onPressed: () {
                                 isDataLoading
-                                    ? Colors.grey.shade600
+                                    ? null
                                     : status.isInTime
-                                        ? Colors.blueAccent
-                                        : Colors.red,
-                              ),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
+                                        ? Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AttendancePage()),
+                                          )
+                                        : ScaffoldMessenger.of(context)
+                                            .showSnackBar(snack);
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                  isDataLoading
+                                      ? Colors.grey.shade600
+                                      : status.isInTime
+                                          ? Colors.blueAccent
+                                          : Colors.red,
+                                ),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                                minimumSize: MaterialStateProperty.all(
+                                  const Size(300, 50),
                                 ),
                               ),
-                              minimumSize: MaterialStateProperty.all(
-                                const Size(300, 50),
+                              child: const Text(
+                                'NEXT',
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
-                            child: const Text(
-                              'NEXT',
-                              style: TextStyle(color: Colors.white),
-                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  )
-                ],
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
           );
