@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.white,
           ),
         ),
-        home: sharedPrefs.loggedIn ? const StudentSelectPage() : const LoginScreen(),
+        home: sharedPrefs.loggedIn ? const StudentSelectPage() : LoginScreen(),
       ),
     );
   }

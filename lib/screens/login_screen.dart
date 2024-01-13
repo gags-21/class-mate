@@ -5,15 +5,15 @@ import 'package:image_upload/util/api.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final validationProvider = Provider.of<ValidationsProvider>(context);
     final size = MediaQuery.of(context).size;
-
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passController = TextEditingController();
 
     // checking valid email id
     bool checkEmailValid() {
@@ -164,7 +164,7 @@ class LoginAlertDialog extends StatelessWidget {
 }
 
 class CredentialsField extends StatelessWidget {
-  const CredentialsField({
+  CredentialsField({
     super.key,
     required this.textController,
     required this.isPassword,
@@ -173,6 +173,8 @@ class CredentialsField extends StatelessWidget {
   final TextEditingController textController;
   final bool isPassword;
 
+  bool passVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -180,7 +182,11 @@ class CredentialsField extends StatelessWidget {
       keyboardType: isPassword
           ? TextInputType.visiblePassword
           : TextInputType.emailAddress,
-      obscureText: isPassword ? true : false,
+      obscureText: isPassword
+          ? passVisible
+              ? false
+              : true
+          : false,
       decoration: InputDecoration(
         isDense: true,
         contentPadding: const EdgeInsets.all(15),
@@ -190,6 +196,19 @@ class CredentialsField extends StatelessWidget {
           child: Icon(
               isPassword ? Icons.lock_open_outlined : Icons.email_outlined),
         ),
+        suffix: isPassword
+            ? IconButton(
+                onPressed: () {
+                  passVisible = !passVisible;
+                  (context as Element).markNeedsBuild();
+                },
+                icon: Icon(
+                  passVisible
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                ),
+              )
+            : null,
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: Colors.blue,
