@@ -3,6 +3,7 @@ import 'package:image_upload/provider/validations_provider.dart';
 import 'package:image_upload/screens/student_selection.dart';
 import 'package:image_upload/util/api.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -26,7 +27,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: SizedBox(
-          height: size.height * 0.9,
+          height: size.height * 0.95,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -56,18 +57,36 @@ class LoginScreen extends StatelessWidget {
                 height: 20,
               ),
 
-              // pass
-              SizedBox(
-                width: 300,
-                child: CredentialsField(
-                  textController: passController,
-                  isPassword: true,
-                ),
+              // pass and forgot pass
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: 300,
+                    child: CredentialsField(
+                      textController: passController,
+                      isPassword: true,
+                    ),
+                  ),
+                  // forgot pass
+                  TextButton(
+                    onPressed: () {
+                      launchUrl(
+                        Uri.parse(
+                            "https://www.bcaeducation.com/lms/forgot-password"),
+                      );
+                    },
+                    child: const Text(
+                      "Forgot Password?",
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ],
               ),
 
               // login button
               const SizedBox(
-                height: 60,
+                height: 30,
               ),
 
               FilledButton.tonal(
@@ -216,8 +235,8 @@ class CredentialsField extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.red,
+          borderSide: BorderSide(
+            color: textController.text == "" ? Colors.red : Colors.blue,
           ),
           borderRadius: BorderRadius.circular(14),
         ),
