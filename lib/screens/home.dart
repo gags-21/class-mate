@@ -7,9 +7,11 @@ import 'package:image_upload/provider/validations_provider.dart';
 import 'package:image_upload/util/api.dart';
 import 'package:image_upload/util/helper.dart';
 import 'package:image_upload/util/shared_prefs.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:image/image.dart' as img;
 
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
@@ -21,6 +23,11 @@ class AttendancePage extends StatefulWidget {
 class _AttendancePageState extends State<AttendancePage> {
   bool stateLoading = true;
 
+  Future<Uint8List> loadAssetAsBytes(String assetPath) async {
+    final ByteData data = await rootBundle.load(assetPath);
+    return data.buffer.asUint8List();
+  }
+
   File? image;
   Future pickImage() async {
     try {
@@ -29,13 +36,31 @@ class _AttendancePageState extends State<AttendancePage> {
         source: ImageSource.camera,
         preferredCameraDevice: CameraDevice.front,
       )
-          .then((value) {
-        if (value != null) sharedPrefs.selfieFile = File(value.path);
+          .then((value) async {
+        DateTime now = DateTime.now();
+        if (value != null) {
+          // image processing
+          final fontZipFile =
+              await loadAssetAsBytes("assets/RobotoCondensed-bold-900.ttf.zip");
+          final font = img.BitmapFont.fromZip(fontZipFile);
+          File file = File(value.path);
+          var imageBytes = file.readAsBytesSync();
+          img.Image? image = img.decodeImage(imageBytes);
+
+          if (image != null) {
+            img.Image selfieImg = img.drawString(img.Image.from(image),
+                DateFormat('dd/MM/yy - hh:mm a').format(now),
+                font: font, x: 50, y: (image.height * .9).floor());
+            file.writeAsBytesSync(img.encodePng(selfieImg));
+          }
+          setState(() => this.image = file);
+          //
+          sharedPrefs.selfieFile = File(value.path);
+        }
         return value;
       });
       if (image == null) return;
       final imageTemp = File(image.path);
-      setState(() => this.image = imageTemp);
     } on PlatformException catch (e) {
       var snack = const SnackBar(content: Text("Something Went Wrong"));
       ScaffoldMessenger.of(context).showSnackBar(snack);
