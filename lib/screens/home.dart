@@ -22,6 +22,7 @@ class AttendancePage extends StatefulWidget {
 
 class _AttendancePageState extends State<AttendancePage> {
   bool stateLoading = true;
+  bool imageInProcess = false;
 
   Future<Uint8List> loadAssetAsBytes(String assetPath) async {
     final ByteData data = await rootBundle.load(assetPath);
@@ -30,37 +31,43 @@ class _AttendancePageState extends State<AttendancePage> {
 
   File? image;
   Future pickImage() async {
+    setState(() => imageInProcess = true);
+    final fontZipFile =
+        await loadAssetAsBytes("assets/Roboto-Black-900.ttf.zip");
+    final font = img.BitmapFont.fromZip(fontZipFile);
     try {
       final image = await ImagePicker()
           .pickImage(
         source: ImageSource.camera,
+        maxHeight: 1800,
+        maxWidth: 1800,
         preferredCameraDevice: CameraDevice.front,
       )
           .then((value) async {
         DateTime now = DateTime.now();
         if (value != null) {
           // image processing
-          final fontZipFile =
-              await loadAssetAsBytes("assets/RobotoCondensed-bold-900.ttf.zip");
-          final font = img.BitmapFont.fromZip(fontZipFile);
           File file = File(value.path);
           var imageBytes = file.readAsBytesSync();
           img.Image? image = img.decodeImage(imageBytes);
 
           if (image != null) {
             img.Image selfieImg = img.drawString(img.Image.from(image),
-                DateFormat('dd/MM/yy - hh:mm a').format(now),
+                DateFormat('dd/MM/yyy - hh:mm a').format(now),
                 font: font, x: 50, y: (image.height * .9).floor());
             file.writeAsBytesSync(img.encodePng(selfieImg));
           }
-          setState(() => this.image = file);
+          setState(() {
+            this.image = file;
+            imageInProcess = false;
+          });
           //
           sharedPrefs.selfieFile = File(value.path);
         }
         return value;
       });
       if (image == null) return;
-      final imageTemp = File(image.path);
+      // final imageTemp = File(image.path);
     } on PlatformException catch (e) {
       var snack = const SnackBar(content: Text("Something Went Wrong"));
       ScaffoldMessenger.of(context).showSnackBar(snack);
@@ -70,6 +77,7 @@ class _AttendancePageState extends State<AttendancePage> {
   @override
   void initState() {
     super.initState();
+    // location
     detectLocation().then((value) {
       //  storing location
       sharedPrefs.userLocation = [
@@ -184,7 +192,7 @@ class _AttendancePageState extends State<AttendancePage> {
                           image == null
                               ? GestureDetector(
                                   onTap: () {
-                                    pickImage();
+                                    imageInProcess ? null : pickImage();
                                   },
                                   child: Container(
                                     height: 300,
@@ -196,23 +204,26 @@ class _AttendancePageState extends State<AttendancePage> {
                                         Radius.circular(10),
                                       ),
                                     ),
-                                    child: const Center(
+                                    child: Center(
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.camera_front_outlined,
                                             color: Colors.grey,
                                             size: 50,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 10,
                                           ),
                                           Text(
-                                            "Tap to capture image",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 15),
+                                            imageInProcess
+                                                ? "Processing Image"
+                                                : "Tap to capture image",
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 15,
+                                            ),
                                           ),
                                         ],
                                       ),
