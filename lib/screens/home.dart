@@ -66,7 +66,10 @@ class _AttendancePageState extends State<AttendancePage> {
         }
         return value;
       });
-      if (image == null) return;
+      if (image == null) {
+          setState(() => imageInProcess = false);
+        return;
+      }
       // final imageTemp = File(image.path);
     } on PlatformException catch (e) {
       var snack = const SnackBar(content: Text("Something Went Wrong"));
@@ -318,8 +321,8 @@ class _AttendancePageState extends State<AttendancePage> {
                                           Navigator.pop(context);
                                         }
                                     }
+                                     sharedPrefs.funcFeedback = "New";
                                   });
-                                  ;
                                 } else {
                                   var snack = const SnackBar(
                                       content:
