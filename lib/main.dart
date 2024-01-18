@@ -13,6 +13,7 @@ void callbackDispatcher() {
     await sharedPrefs.init();
     if (taskName == "uploadImg") {
       // print("Uploading? ${sharedPrefs.studentId} ${sharedPrefs.lat} ${sharedPrefs.long}");
+      sharedPrefs.funcFeedback = "Sending";
       await UserApi()
           .sendStudentInfo(
         id: sharedPrefs.studentId,

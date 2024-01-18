@@ -11,14 +11,20 @@ class HistoryScreen extends StatelessWidget {
   HistoryScreen({super.key});
 
   DateTime? currentBackPressTime;
+  String feedback = "";
 
   @override
   Widget build(BuildContext context) {
+    print("Current feedback , ${sharedPrefs.funcFeedback}");
     return PopScope(
-      canPop: sharedPrefs.funcFeedback == "No Feedback" ? false : true,
+      canPop: sharedPrefs.funcFeedback == "No Feedback" ||
+              sharedPrefs.funcFeedback == "Sending"
+          ? false
+          : true,
       onPopInvoked: (didPop) {
         DateTime now = DateTime.now();
-        if (sharedPrefs.funcFeedback == "No Feedback") {
+        if (sharedPrefs.funcFeedback == "No Feedback" ||
+            sharedPrefs.funcFeedback == "Sending") {
           if (currentBackPressTime == null ||
               now.difference(currentBackPressTime ?? DateTime.now()) >
                   const Duration(seconds: 2)) {
@@ -32,7 +38,8 @@ class HistoryScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: sharedPrefs.funcFeedback == "No Feedback"
+        appBar: sharedPrefs.funcFeedback == "No Feedback" ||
+                sharedPrefs.funcFeedback == "Sending"
             ? AppBar(
                 leading: const SizedBox(),
                 title: const Text("Offline History"),
@@ -41,7 +48,8 @@ class HistoryScreen extends StatelessWidget {
                 title: const Text("Offline History"),
               ),
         body: Center(
-          child: sharedPrefs.funcFeedback == "No Feedback"
+          child: sharedPrefs.funcFeedback == "No Feedback" ||
+                  sharedPrefs.funcFeedback == "Sending"
               ? Consumer<ValidationsProvider>(builder: (context, status, _) {
                   return Stack(
                     alignment: Alignment.center,
@@ -74,6 +82,16 @@ class HistoryScreen extends StatelessWidget {
                                 "Name: ${sharedPrefs.studentName} \n\nLocation: ${sharedPrefs.lat}, ${sharedPrefs.long} \n\nIn Time: True",
                                 style: const TextStyle(fontSize: 15),
                               ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              // feedbacks
+                              feedback == ""
+                                  ? const SizedBox()
+                                  : Text(
+                                      "Status - $feedback",
+                                      style: const TextStyle(fontSize: 15),
+                                    ),
                             ],
                           ),
                         ),
@@ -118,34 +136,56 @@ class HistoryScreen extends StatelessWidget {
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: FilledButton.tonal(
                                   onPressed: status.isInternet
-                                      ? () {
-                                          sharedPrefs.funcFeedback =
-                                              "No Feedback";
+                                      ? sharedPrefs.funcFeedback == "Sending"
+                                          ? () async {
+                                              feedback =
+                                                  "This attendance may have already pushed, please restart your app in few minutes";
+                                              (context as Element)
+                                                  .markNeedsBuild();
+                                              await UserApi()
+                                                  .sendStudentInfo(
+                                                id: sharedPrefs.studentId,
+                                                lat: sharedPrefs.lat,
+                                                long: sharedPrefs.long,
+                                                selfie: sharedPrefs.selfie,
+                                              )
+                                                  .then((value) {
+                                                sharedPrefs.funcFeedback =
+                                                    "Successful";
+                                              }).catchError((err) {
+                                                sharedPrefs.funcFeedback = err;
+                                              });
+                                            }
+                                          : () async {
+                                              sharedPrefs.funcFeedback =
+                                                  "No Feedback";
 
-                                          status.loaderSwitcher(true);
-                                          UserApi()
-                                              .sendStudentInfo(
-                                                  id: sharedPrefs.studentId,
-                                                  lat: sharedPrefs.lat,
-                                                  long: sharedPrefs.long,
-                                                  selfie: sharedPrefs.selfie)
-                                              .then((value) {
-                                            var snack = const SnackBar(
-                                                content: Text(
-                                                    "Attendance Pushed!!"));
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(snack);
-                                            status.submission(1);
-                                            status.loaderSwitcher(false);
-                                          }).catchError((e) {
-                                            var snack = SnackBar(
-                                                content: Text(e.toString()));
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(snack);
-                                            status.submission(2);
-                                            status.loaderSwitcher(false);
-                                          });
-                                        }
+                                              status.loaderSwitcher(true);
+                                              await UserApi()
+                                                  .sendStudentInfo(
+                                                id: sharedPrefs.studentId,
+                                                lat: sharedPrefs.lat,
+                                                long: sharedPrefs.long,
+                                                selfie: sharedPrefs.selfie,
+                                              )
+                                                  .then((value) {
+                                                var snack = const SnackBar(
+                                                    content: Text(
+                                                        "Attendance Pushed!!"));
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snack);
+                                                status.submission(1);
+                                                status.loaderSwitcher(false);
+                                              }).catchError((e) {
+                                                var snack = SnackBar(
+                                                    content:
+                                                        Text(e.toString()));
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(snack);
+                                                status.submission(2);
+                                                status.loaderSwitcher(false);
+                                              });
+                                            }
                                       : () {},
                                   style: ButtonStyle(
                                     backgroundColor: !(status.isInternet)
@@ -163,7 +203,7 @@ class HistoryScreen extends StatelessWidget {
                                     ),
                                   ),
                                   child: const Text(
-                                    'Sync Attendance',
+                                    "Sync Attendance",
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -177,7 +217,8 @@ class HistoryScreen extends StatelessWidget {
                               color: Colors.black.withAlpha(100),
                               height: double.infinity,
                               width: double.infinity,
-                              child: const Center(child: CircularProgressIndicator()),
+                              child: const Center(
+                                  child: CircularProgressIndicator()),
                             )
                           : const SizedBox(),
                       status.isSubmittedSuccess
@@ -191,7 +232,7 @@ class HistoryScreen extends StatelessWidget {
                               ),
                             )
                           : const SizedBox(),
-                           status.isSubmittedFailed
+                      status.isSubmittedFailed
                           ? Container(
                               color: Colors.black.withAlpha(100),
                               height: double.infinity,

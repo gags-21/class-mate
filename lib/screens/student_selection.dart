@@ -33,7 +33,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
           Provider.of<ValidationsProvider>(context, listen: false);
       validationProvider.internetAvailability();
 
-      if (sharedPrefs.funcFeedback != "No Feedback") {
+      if (sharedPrefs.funcFeedback != "No Feedback" && sharedPrefs.funcFeedback != "Sending") {
         apis.getValidateTime().then((value) {
           validationProvider.validateTime(
               sharedPrefs.validTime[0], sharedPrefs.validTime[1]);
@@ -60,7 +60,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
             isDataLoading = false;
           });
         });
-      } else if (sharedPrefs.funcFeedback == "No Feedback") {
+      } else if (sharedPrefs.funcFeedback == "No Feedback" || sharedPrefs.funcFeedback == "Sending") {
         Navigator.push(
           context,
           MaterialPageRoute(
