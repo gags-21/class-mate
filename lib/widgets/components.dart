@@ -115,3 +115,48 @@ class MainDrawer extends StatelessWidget {
     );
   }
 }
+
+class GpsLoadingTimer extends StatelessWidget {
+  const GpsLoadingTimer({
+    super.key,
+    required this.size,
+    required this.secondsRemaining,
+  });
+
+  final Size size;
+  final int secondsRemaining;
+
+  @override
+  Widget build(BuildContext context) {
+    return secondsRemaining == 0 ? const Center(
+      child: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Text(
+                  "The GPS signal detection is taking longer than usual. Please restart the app and try again",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+      ),
+    ) : Stack(
+        alignment: Alignment.center,
+        children: [
+          const CircularProgressIndicator(),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: size.height * 0.1),
+              child: Text(
+                "Searching for GPS Location \n $secondsRemaining seconds",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+  }
+}
