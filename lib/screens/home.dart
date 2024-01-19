@@ -59,7 +59,10 @@ class _AttendancePageState extends State<AttendancePage> {
     setState(() => imageInProcess = true);
     final fontZipFile =
         await loadAssetAsBytes("assets/Roboto-Black-900.ttf.zip");
+    final font2ZipFile = await loadAssetAsBytes("assets/Roboto-Medium.ttf.zip");
+
     final font = img.BitmapFont.fromZip(fontZipFile);
+    final font2 = img.BitmapFont.fromZip(font2ZipFile);
     try {
       final image = await ImagePicker()
           .pickImage(
@@ -79,7 +82,10 @@ class _AttendancePageState extends State<AttendancePage> {
           if (image != null) {
             img.Image selfieImg = img.drawString(img.Image.from(image),
                 DateFormat('dd/MM/yyy - hh:mm a').format(now),
-                font: font, x: 50, y: (image.height * .9).floor());
+                font: font, x: 50, y: (image.height * .8).floor());
+            selfieImg = img.drawString(img.Image.from(selfieImg),
+                "BCA Education, DES Mumbai Campus Dadar",
+                font: font2, x: 50, y: (image.height * .9).floor());
             file.writeAsBytesSync(img.encodePng(selfieImg));
           }
           setState(() {

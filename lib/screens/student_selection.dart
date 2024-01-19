@@ -23,7 +23,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
   int? id;
 
   // snacks
-  var snack = const SnackBar(content: Text("Please mark attendance in valid"));
+  var snack = const SnackBar(content: Text("Please mark attendance in valid time"));
 
   @override
   void initState() {
