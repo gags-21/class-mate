@@ -15,7 +15,7 @@ class MainDrawer extends StatelessWidget {
     return Drawer(
       child: Stack(
         children: [
-      //   upper menu
+          //   upper menu
           Padding(
             padding: const EdgeInsets.only(top: 20.0, left: 10.0, bottom: 20.0),
             child: ListView(
@@ -57,7 +57,7 @@ class MainDrawer extends StatelessWidget {
           ),
 
           //  lower
-                   Align(
+          Align(
             alignment: Alignment.bottomCenter,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -128,35 +128,37 @@ class GpsLoadingTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return secondsRemaining == 0 ? const Center(
-      child: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Text(
-                  "The GPS signal detection is taking longer than usual. Please restart the app and try again",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-      ),
-    ) : Stack(
-        alignment: Alignment.center,
-        children: [
-          const CircularProgressIndicator(),
-          Align(
-            alignment: Alignment.bottomCenter,
+    return secondsRemaining == 0
+        ? const Center(
             child: Padding(
-              padding: EdgeInsets.only(bottom: size.height * 0.1),
+              padding: EdgeInsets.all(20.0),
               child: Text(
-                "Searching for GPS Location \n $secondsRemaining seconds",
+                "The GPS signal detection is taking longer than usual. Please restart the app and try again",
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                 ),
               ),
             ),
-          ),
-        ],
-      );
+          )
+        : Stack(
+            alignment: Alignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: size.height * 0.1),
+                  child: Text(
+                    "Searching for GPS Location \n $secondsRemaining seconds",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
   }
 }
