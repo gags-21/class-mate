@@ -1,6 +1,7 @@
 const String loggedInKey = "logged_in";
 const String userLatKey = "user_lat";
 const String userLongKey = "user_long";
+const String timestampKey = "timestamp";
 const String attendancePhotoKey = "attendance_photo";
 const String validTimeKey = "valid_time";
 const String studentListKey = "student_list";

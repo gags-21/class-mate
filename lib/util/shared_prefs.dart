@@ -24,6 +24,7 @@ class SharedPrefs {
   String get studentId => _sharedPrefs.getString(studentIdKey) ?? "";
   String get lat => _sharedPrefs.getString(userLatKey) ?? "";
   String get long => _sharedPrefs.getString(userLongKey) ?? "";
+  String get timestamp => _sharedPrefs.getString(timestampKey) ?? "";
   String get selfie => _sharedPrefs.getString(base64SelfieKey) ?? "";
 
   set loggedIn(bool isLoggedIn) {
@@ -33,6 +34,10 @@ class SharedPrefs {
   set userLocation(List<String> location) {
     _sharedPrefs.setString(userLatKey, location[0]);
     _sharedPrefs.setString(userLongKey, location[1]);
+  }
+
+  set timestamp(String timestamp) {
+    _sharedPrefs.setString(timestampKey, timestamp);
   }
 
   set validTime(List<String> time) {

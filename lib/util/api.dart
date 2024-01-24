@@ -63,6 +63,7 @@ class UserApi {
     required String id,
     required String lat,
     required String long,
+    required String timestamp,
     required String selfie,
   }) async {
     Map<String, String> info = {
@@ -70,9 +71,10 @@ class UserApi {
       "student_id": id,
       "latitude": lat,
       "longitude": long,
+      "attendance_timestamp": timestamp,
       "file": selfie,
     };
-    // log("Pushing => $id, $lat, $long, $selfie");
+    // log("Pushing => $id, $lat, $long, $timestamp");
     var uri = Uri.parse(
         "https://www.bcaeducation.com/lms/api/student/attendance/store");
     try {
@@ -83,7 +85,7 @@ class UserApi {
       );
       if (response.statusCode == 200) {
         sharedPrefs.funcFeedback = "Successful";
-        print("Error not cominn coming ? ${response.body}");
+        // print("Error not cominn coming ? ${response.body}");
         return response.body;
       } else {
         // log("Error coming ? ${response.body}");

@@ -92,7 +92,7 @@ class _AttendancePageState extends State<AttendancePage> {
             this.image = file;
             imageInProcess = false;
           });
-          //
+          sharedPrefs.timestamp = DateTime.now().toString();
           sharedPrefs.selfieFile = File(value.path);
         }
         return value;
@@ -116,7 +116,7 @@ class _AttendancePageState extends State<AttendancePage> {
     detectLocation().then((value) {
       sharedPrefs.userLocation = [
         value.latitude.toString(),
-        value.longitude.toString()
+        value.longitude.toString(),
       ];
       setState(() {
         stateLoading = false;
@@ -305,10 +305,12 @@ class _AttendancePageState extends State<AttendancePage> {
                                           status.loaderSwitcher(true);
                                           await UserApi()
                                               .sendStudentInfo(
-                                                  id: sharedPrefs.studentId,
-                                                  lat: sharedPrefs.lat,
-                                                  long: sharedPrefs.long,
-                                                  selfie: sharedPrefs.selfie)
+                                            id: sharedPrefs.studentId,
+                                            lat: sharedPrefs.lat,
+                                            long: sharedPrefs.long,
+                                            timestamp: sharedPrefs.timestamp,
+                                            selfie: sharedPrefs.selfie,
+                                          )
                                               .then((value) {
                                             var snack = const SnackBar(
                                               content:

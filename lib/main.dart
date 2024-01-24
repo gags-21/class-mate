@@ -19,6 +19,7 @@ void callbackDispatcher() {
         id: sharedPrefs.studentId,
         lat: sharedPrefs.lat,
         long: sharedPrefs.long,
+        timestamp: sharedPrefs.timestamp,
         selfie: sharedPrefs.selfie,
       )
           .then((value) {

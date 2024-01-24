@@ -147,6 +147,8 @@ class HistoryScreen extends StatelessWidget {
                                                 id: sharedPrefs.studentId,
                                                 lat: sharedPrefs.lat,
                                                 long: sharedPrefs.long,
+                                                timestamp:
+                                                    sharedPrefs.timestamp,
                                                 selfie: sharedPrefs.selfie,
                                               )
                                                   .then((value) {
@@ -166,12 +168,16 @@ class HistoryScreen extends StatelessWidget {
                                                 id: sharedPrefs.studentId,
                                                 lat: sharedPrefs.lat,
                                                 long: sharedPrefs.long,
+                                                timestamp:
+                                                    sharedPrefs.timestamp,
                                                 selfie: sharedPrefs.selfie,
                                               )
                                                   .then((value) {
                                                 var snack = const SnackBar(
-                                                    content: Text(
-                                                        "Attendance Pushed!!"));
+                                                  content: Text(
+                                                    "Attendance Pushed!!",
+                                                  ),
+                                                );
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(snack);
                                                 status.submission(1);
