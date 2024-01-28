@@ -1,16 +1,6 @@
-# yash-infotech-bca-student-attendance-app
+![featuringcm_featuring](https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/45b97390-d2df-4483-a22e-0b62a0468887)
 
-A new Flutter project.
+# Class Mate Student attendance application.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Features
