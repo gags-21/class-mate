@@ -21,3 +21,12 @@ Below are the key features that make ClassMate stand out:
 ### 🔄 Continuous Improvement and Updates
 - Regular updates for continuous improvement of app features and user experience.
 - Open to community feedback and suggestions, fostering a collaborative improvement environment.
+
+## Preview
+<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/f5859b1c-4f4d-402f-86e9-401614af982b" width="250" alt="preview">
+<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/8db20f9d-102d-4bd2-8f8f-1ec5e65e6019" width="250" alt="preview">
+<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/55630f34-8c9f-4caa-b797-4f237eae9e19" width="250" alt="preview">
+<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/a052d018-1f0a-47ea-9b90-d0aeeb5c0a76" width="250" alt="preview">
+<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/15a2c1c6-803a-491d-8a8c-1105b866e0b8" width="250" alt="preview">
+<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/c5096d83-b1d3-479d-b050-480e281a1a02" width="250" alt="preview">
+<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/12216bee-727a-4551-ad63-33b2bb10264e" width="250" alt="preview">
