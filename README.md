@@ -1,4 +1,4 @@
-![featuringcm_featuring](https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/45b97390-d2df-4483-a22e-0b62a0468887)
+![featuringcm_featuring](https://github.com/gags-21/class-mate/assets/61724325/5cc26441-a20a-40b0-a3fe-644add78cc3a)
 
 # Class Mate Student attendance application.
 **ClassMate** is designed to streamline the process of marking and managing student attendance. Leveraging modern technology, it ensures that attendance tracking is both accurate and efficient, perfect for educators and institutions. With **more than 100~** students using it daily, this app ensures an accurate and efficient attendance tracking experience.
@@ -23,10 +23,10 @@ Below are the key features that make ClassMate stand out:
 - Open to community feedback and suggestions, fostering a collaborative improvement environment.
 
 ## Preview
-<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/f5859b1c-4f4d-402f-86e9-401614af982b" width="250" alt="preview">
-<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/8db20f9d-102d-4bd2-8f8f-1ec5e65e6019" width="250" alt="preview">
-<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/55630f34-8c9f-4caa-b797-4f237eae9e19" width="250" alt="preview">
-<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/a052d018-1f0a-47ea-9b90-d0aeeb5c0a76" width="250" alt="preview">
-<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/15a2c1c6-803a-491d-8a8c-1105b866e0b8" width="250" alt="preview">
-<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/c5096d83-b1d3-479d-b050-480e281a1a02" width="250" alt="preview">
-<img src="https://github.com/codegrand/yash-infotech-bca-student-attendance-app/assets/61724325/12216bee-727a-4551-ad63-33b2bb10264e" width="250" alt="preview">
+<img src="https://github.com/gags-21/class-mate/assets/61724325/292d19ad-c3e0-497b-b939-3cc1884b1ee4" width="250" alt="preview">
+<img src="https://github.com/gags-21/class-mate/assets/61724325/01946a49-20e8-407e-a0b1-cdf4a64205a8" width="250" alt="preview">
+<img src="https://github.com/gags-21/class-mate/assets/61724325/2ccafbbc-527c-4fa6-a67b-f6740afa12cd" width="250" alt="preview">
+<img src="https://github.com/gags-21/class-mate/assets/61724325/73797580-914b-4005-9ea6-5ee967eb8ce2" width="250" alt="preview">
+<img src="https://github.com/gags-21/class-mate/assets/61724325/658be58d-1559-4139-af61-58d4863c0bbf" width="250" alt="preview">
+<img src="https://github.com/gags-21/class-mate/assets/61724325/82fef206-db56-4ef8-898d-8aae149e1a6d" width="250" alt="preview">
+<img src="https://github.com/gags-21/class-mate/assets/61724325/b444b6da-7406-47ea-9e6c-94394cb12c75" width="250" alt="preview">
