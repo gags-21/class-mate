@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:image_upload/api_key.dart';
@@ -18,14 +18,18 @@ class UserApi {
       });
       final studentData = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        sharedPrefs.student =
-            StudentsList(id: studentData["student_id"], name: studentData["full_name"]);
+        sharedPrefs.student = StudentsList(
+            id: studentData["student_id"], name: studentData["full_name"]);
         sharedPrefs.loggedIn = true;
         return true;
       } else {
         sharedPrefs.loggedIn = false;
         throw studentData["message"];
       }
+    } on SocketException catch (e) {
+      // log('error while login - $e');
+      sharedPrefs.funcFeedback = "Failed! Please try again later";
+      throw sharedPrefs.funcFeedback;
     } catch (err) {
       rethrow;
     }
@@ -34,13 +38,14 @@ class UserApi {
   // attendance timing
   Future<void> getValidateTime() async {
     var uri = Uri.parse("https://www.bcaeducation.com/lms/api/attendance-time");
-    var response = await http.post(uri, body: {
+    await http.post(uri, body: {
       "passkey": api_key,
     }).then((value) async {
       final time = json.decode(value.body)["AttendanceTime"];
       sharedPrefs.validTime = [time["start_time"], time["end_time"]];
       // sharedPrefs.validTime = ["10:00:00", "23:30:00"];
     }).catchError((err) {
+      // log('Error while fetching data - $err');
       throw "Error";
     });
   }
@@ -74,7 +79,6 @@ class UserApi {
       "attendance_timestamp": timestamp,
       "file": selfie,
     };
-    // log("Pushing => $id, $lat, $long, $timestamp");
     var uri = Uri.parse(
         "https://www.bcaeducation.com/lms/api/student/attendance/store");
     try {
@@ -85,15 +89,18 @@ class UserApi {
       );
       if (response.statusCode == 200) {
         sharedPrefs.funcFeedback = "Successful";
-        // print("Error not cominn coming ? ${response.body}");
         return response.body;
       } else {
         // log("Error coming ? ${response.body}");
         sharedPrefs.funcFeedback = json.decode(response.body)["message"];
         throw json.decode(response.body)["message"];
       }
+    } on SocketException catch (e) {
+      // log('error- $e');
+      sharedPrefs.funcFeedback = "Failed! Please try again later";
+      throw sharedPrefs.funcFeedback;
     } catch (e) {
-      // print("Catching this error - ${sharedPrefs.funcFeedback}");
+      // log('error while pushing att. - $e');
       throw sharedPrefs.funcFeedback;
     }
   }
