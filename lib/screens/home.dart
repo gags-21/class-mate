@@ -93,7 +93,7 @@ class _AttendancePageState extends State<AttendancePage> {
             imageInProcess = false;
           });
           sharedPrefs.timestamp = DateTime.now().toString();
-          sharedPrefs.selfieFile = File(value.path);
+          sharedPrefs.selfieFile(File(value.path));
         }
         return value;
       });

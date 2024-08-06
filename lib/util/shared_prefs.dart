@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_upload/constants/shared_prefs_keys.dart';
 import 'package:image_upload/modals/student_modal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,8 +58,17 @@ class SharedPrefs {
     _sharedPrefs.setString(funcFeedbackKey, feedback);
   }
 
-  set selfieFile(File selfieFile) {
-    List<int> imageBytes = selfieFile.readAsBytesSync();
+  void selfieFile(File selfieFile) async {
+    // compress file
+    XFile? compressedXFile = await FlutterImageCompress.compressAndGetFile(
+        selfieFile.absolute.path, "${selfieFile.absolute.path}compressed.jpg",
+        quality: 30);
+    if (compressedXFile == null) {
+      throw Exception("Image compression failed");
+    }
+    File compressed = File(compressedXFile.path);
+
+    List<int> imageBytes = compressed.readAsBytesSync();
     String base64Selfie = base64Encode(imageBytes);
     _sharedPrefs.setString(base64SelfieKey, base64Selfie);
   }
