@@ -101,6 +101,7 @@ class UserApi {
       throw sharedPrefs.funcFeedback;
     } catch (e) {
       // log('error while pushing att. - $e');
+      sharedPrefs.funcFeedback = "Failed! Please try again later";
       throw sharedPrefs.funcFeedback;
     }
   }

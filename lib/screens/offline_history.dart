@@ -43,6 +43,14 @@ class HistoryScreen extends StatelessWidget {
             ? AppBar(
                 leading: const SizedBox(),
                 title: const Text("Offline History"),
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        sharedPrefs.funcFeedback = "Deleted";
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.delete))
+                ],
               )
             : AppBar(
                 title: const Text("Offline History"),
@@ -136,6 +144,7 @@ class HistoryScreen extends StatelessWidget {
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: FilledButton.tonal(
                                   onPressed: status.isInternet
+                                      // SENDING ATTENDANCE
                                       ? sharedPrefs.funcFeedback == "Sending"
                                           ? () async {
                                               feedback =
@@ -183,6 +192,8 @@ class HistoryScreen extends StatelessWidget {
                                                 status.submission(1);
                                                 status.loaderSwitcher(false);
                                               }).catchError((e) {
+                                                sharedPrefs.funcFeedback =
+                                                    'No Feedback';
                                                 var snack = SnackBar(
                                                     content:
                                                         Text(e.toString()));
