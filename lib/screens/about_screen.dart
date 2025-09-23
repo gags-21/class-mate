@@ -14,7 +14,7 @@ class AboutScreen extends StatelessWidget {
         child: Column(
           children: [
             rowEntry("Application Name", "ClassMate - Student Attendance App"),
-            rowEntry("Application Version", "1.1.0"),
+            rowEntry("Application Version", "1.2.0"),
             rowEntry("Deployment Date", "10 Jan 2024"),
           ],
         ),

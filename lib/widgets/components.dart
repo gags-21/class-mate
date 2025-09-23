@@ -104,7 +104,7 @@ class MainDrawer extends StatelessWidget {
                   color: Colors.grey.shade200,
                   height: 40,
                   child: const Center(
-                    child: Text("version 1.0"),
+                    child: Text("version 1.2"),
                   ),
                 ),
               ],
